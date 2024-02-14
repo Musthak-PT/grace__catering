@@ -63,6 +63,8 @@ urlpatterns = [
     path('property-management/', include('apps.property_management.urls')),
     path('customer-management/', include('apps.customers.urls')),
     path('booking-management/', include('apps.bookings.urls')),
+    path('category/', include('apps.category.urls')),
+    path('product/', include('apps.product.urls')),
     
     
     

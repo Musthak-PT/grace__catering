@@ -83,6 +83,8 @@ LOCAL_APPS = [
     'apps.customers',
     'apps.ad_management',
     'apps.bookings',
+    'apps.category',
+    'apps.product',
 ]
 
 # additional plugin apps
