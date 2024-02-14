@@ -12,7 +12,5 @@ urlpatterns = [
         path('category', login_required(views.LoadCategoryDatatable.as_view()), name='load.category.datatable'),
         path('destroy_records/', login_required(views.DestroyCategoryRecordsView.as_view()), name='category.records.destroy'),
         path('active-or-inactive/', login_required(views.CategoryStatusChange.as_view()), name="category.status_change"),
-        # path('banner-image-upload', login_required(views.BannerImageUploadView.as_view()), name='banner_image.image.upload'),
-        # path('get-banner-images', views.GetBannerimagesView.as_view(), name='get.banner_images.images'),
     ])),
 ]
