@@ -15,7 +15,7 @@ Follow these commands step by step
 
 ```python
 # clone git repository
-git clone https://wbgit.workbank.com/ushas/solo_core-backend.git
+git clone https://github.com/Musthak-PT/grace__catering.git
 
 # move to project root diretory
 cd solo_core
