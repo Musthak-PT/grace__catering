@@ -1,0 +1,257 @@
+{% extends 'admin/layouts/apps.html' %}
+{% load static %}
+
+
+{% block content %}
+
+	<!--begin::Content wrapper-->
+    <div class="d-flex flex-column flex-column-fluid">
+        
+        
+
+        {% include 'admin/layouts/breadcrumbs.html' %}
+
+
+
+
+        <!--begin::Content-->
+        <div id="kt_app_content" class="app-content flex-column-fluid">
+            <!--begin::Content container-->
+            <div id="kt_app_content_container" class="app-container container-xxl">
+                <!--begin::Form-->
+                <form id="create-or-update-admin-form" class="form d-flex flex-column flex-lg-row"  method="POST" enctype="multipart/form-data"  action="{% url 'testimonial:testimonial.create' %}">
+                    {% csrf_token %}
+    
+                    <input type="hidden" name="testimonial_id" id="casestudy_id" value="{{testimonial_obj.id}}" />
+                    <!--begin::Aside column-->
+                    <div class="d-flex flex-column gap-7 gap-lg-10 w-100 w-lg-300px mb-7 me-lg-10">
+                        <!--begin::Logo settings-->
+                        <div class="card card-flush py-4">
+                            
+                            <div class="card-header">
+                                <!--begin::Card title-->
+                                <div class="card-title">
+                                    <h2>Image</h2>
+                                </div>
+                                <!--end::Card title-->
+                            </div>
+                            
+                            
+                            <div class="card-body text-center pt-0">
+                                <!--begin::Thumbnail input-->
+                                <div class="image-input image-input-empty image-input-outline mb-3" data-kt-image-input="true" {% if admins.image is not None %} style="background-image: url({{ admins.image.url }})" {% else %} style="background-image: url({% static 'assets/media/svg/files/blank-image.svg' %})" {% endif %}  >
+                                    <!--begin::Preview existing user image-->
+                                    <div class="image-input-wrapper w-150px h-150px"></div>
+                                    <!--end::Preview existing user image-->
+                                    
+                                    <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change admin image">
+                                        <i class="bi bi-pencil-fill fs-7"></i>
+                                        <!--begin::Inputs-->
+                                        <input type="file" name="testimonial_image" accept=".png, .jpg, .jpeg" />
+                                        <input type="hidden" name="admin_image_remove" />
+                                        <!--end::Inputs-->
+                                    </label>
+                                    
+                                    <!--begin::Cancel-->
+                                    <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="Cancel user image">
+                                        <i class="bi bi-x fs-2"></i>
+                                    </span>
+                                    <!--end::Cancel-->
+                                    <!--begin::Remove-->
+                                    <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="remove" data-bs-toggle="tooltip" title="Remove avatar">
+                                        <i class="bi bi-x fs-2"></i>
+                                    </span>
+                                    <!--end::Remove-->
+                                </div>
+                                <!--end::Thumbnail input-->
+                                
+                                <div class="text-muted fs-7">Set the user image. Only *.png, *.jpg and *.jpeg image files are accepted</div>
+                                
+                            </div>
+                            <!--end::Card body-->
+                        </div>
+                        <!--end::Logo settings-->
+                        <!--end::Status-->
+              
+                       
+                    </div>
+                    <!--end::Aside column-->
+                    <!--begin::Main column-->
+                    <div class="d-flex flex-column flex-row-fluid gap-7 gap-lg-10">
+                        <!--begin:::Tabs-->
+                        <ul class="nav nav-custom nav-tabs nav-line-tabs nav-line-tabs-2x border-0 fs-4 fw-bold mb-n2">
+                            <!--begin:::Tab item-->
+                            <li class="nav-item">
+                                <a class="nav-link text-active-primary pb-4 active" data-bs-toggle="tab" href="#create-or-update-admin-general">General</a>
+                            </li>
+                            <!--end:::Tab item-->
+                      
+                        </ul>
+                        <!--end:::Tabs-->
+                        <!--begin::Tab content-->
+                        <div class="tab-content">
+                            <!--begin::Tab pane-->
+                            <div class="tab-pane fade show active" id="create-or-update-admin-general" role="tab-panel">
+                                <div class="d-flex flex-column gap-7 gap-lg-10">
+                                    
+                                    <div class="card card-flush py-4">
+                                        
+                                        <div class="card-header">
+                                            <div class="card-title">
+                                                <h2>General</h2>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="card-body pt-0 ">
+    
+                                            <div class="d-flex mb-10 flex-wrap gap-5 mt-10">
+                                                <div class="fv-row w-100 flex-md-root">
+                                                    <div class="mb-5 fv-row">
+                                                        <label class="required form-label">Title</label>
+                                                        <input type="text" name="title" value="{{property_facility_obj.name}}" class="form-control mb-2" maxlength='20' placeholder="Enter your Title" />
+                                                    </div>
+                                                </div>
+                                                <div class="fv-row w-100 flex-md-root">
+                                                    <div class="mb-5 fv-row">
+                                                        <label class="required form-label">Full name</label>
+                                                        <input type="text" name="full_name" value="{{property_facility_obj.name}}" class="form-control mb-2" maxlength='20' placeholder="Enter your Full Name" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex mb-10 flex-wrap gap-5 mt-10">
+                                                <div class="fv-row w-100 flex-md-root">
+                                                    <div class="mb-5 fv-row">
+                                                        <label class="form-label">Description</label>
+                                                        <textarea id="description"  class="form-control" name="description" placeholder="Enter Description"  maxlength="250">{{property_facility_obj.description | safe}}</textarea>
+                                                        <div class="error-message" style="color: red;"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+    
+    
+                            <!--end::Tab pane-->
+                        </div>
+                        <!--end::Tab content-->
+                        <div class="d-flex justify-content-end">
+                            <!--begin::Button-->
+                            <a href="{% url 'property_management:property_facility.index' %}" id="kt_ecommerce_add_product_cancel" class="btn btn-light me-5">Cancel</a>
+                            <!--end::Button-->
+                            <!--begin::Button-->
+                            <button type="submit" id="create-or-update-admin-submit" class="btn btn-primary">
+                                <span class="indicator-label">Save </span>
+                                <span class="indicator-progress">Please wait... 
+                                <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                            </button>
+                            <!--end::Button-->
+                        </div>
+                    </div>
+                    <!--end::Main column-->
+                </form>
+                <!--end::Form-->
+            </div>
+            <!--end::Content container-->
+        </div>
+        <!--end::Content-->
+    </div>
+    <!--end::Content wrapper-->
+	
+{% endblock content %}
+
+ 
+
+{% block script %}
+    <script>
+
+        var adminId = document.getElementById('casestudy_id').value;
+        var passwordField = document.getElementById('passwordField');
+        
+        // Check if adminId is not empty or undefined
+        if (adminId && adminId !== "undefined") {
+            passwordField.style.display = 'none';
+        }
+
+
+        var api_config = {
+
+            "validation"   : "{% url 'admins:admin.email_exist_check' %}",
+        }
+    
+
+ $('input[name="email"]').on('keyup', function() {
+    // Get the value from the input field
+    var inputValue = $(this).val();
+    
+    // Check if the email is empty
+    if (inputValue.trim() === '') {
+        // Clear the error message, show the Save button, and enable form submission
+        $('.error-message').text('');
+        $('#create-or-update-admin-submit').show();
+        $('form').off('submit');
+        return;
+    }
+
+    var casestudyId = $('#casestudy_id').val();
+
+    // Create the data object to send in the AJAX request
+    var postData = {
+        email: inputValue, // Change 'url' to 'email' for better clarity
+        instance_id: casestudyId
+    };
+
+    // Cache the Save button element
+    var saveButton = $('#create-or-update-admin-submit');
+
+    // Make the AJAX POST request
+    $.ajax({
+        type: "POST",
+        url: api_config.validation,
+        data: postData,
+        success: function(response) {
+            // Handle the successful response here
+            console.log("AJAX request successful:", response);
+
+            // Check if the response indicates a duplicate email
+            if (response.status_code === 100 && response.message === 'Email Already Exist') {
+                // Display the error message
+                $('.error-message').text('Email Already Exist');
+                // Hide the Save button
+                saveButton.hide();
+                // Disable form submission
+                $('form').on('submit', function(event) {
+                    event.preventDefault();
+                });
+            } else {
+                // Clear the error message, show the Save button, and enable form submission
+                $('.error-message').text('');
+                saveButton.show();
+                $('form').off('submit');
+            }
+        },
+        error: function(error) {
+            // Handle any errors here
+            console.error("AJAX request error:", error);
+        }
+    });
+});
+
+
+
+
+
+        // Check if err_message input field has a non-empty value
+        var errMessageInput = document.getElementById('err_message');
+        if (errMessageInput && errMessageInput.value.trim() !== '') {
+            // Display a toastr error message for 3 seconds
+            toastr.error(errMessageInput.value, '', { timeOut: 1000 });
+        }
+    </script>
+
+    <script src="{% static 'assets/js/custom/pages/home-page/property-management/testimonial/create-or-update-testimonial.js' %}?time={% now 'h:i:s' %}"></script>
+
+
+
+{% endblock script %}

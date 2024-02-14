@@ -1,0 +1,394 @@
+{% extends 'admin/layouts/apps.html' %}
+{% load static %}
+
+
+{% block content %}
+	<!--begin::Content wrapper-->
+    <div class="d-flex flex-column flex-column-fluid">
+        
+        
+
+        {% include 'admin/layouts/breadcrumbs.html' %}
+
+ 
+
+
+        <!--begin::Content-->
+        <div id="kt_app_content" class="app-content flex-column-fluid">
+            <!--begin::Content container-->
+            <div id="kt_app_content_container" class="app-container container-xxl">
+                <!--begin::Form-->
+                <form id="create-or-update-vehicle-form" class="form d-flex flex-column flex-lg-row"  method="POST" enctype="multipart/form-data"  action="{% url 'bookings:manual_booking.create' %}">
+                    {% csrf_token %}
+    
+                    <input type="hidden" name="manual_booking_id" value="{{booked_price_obj.id}}" />
+                    <input type="hidden" name="property_uuid" value="{{uuid}}" />
+                    {% comment %} <input type="text" id="property_room_obj" value="{{hotel_room_queryset}}" /> {% endcomment %}
+                    <input type="hidden" name="booked_room_details_and_document"/>
+                    
+
+                    {% comment %} </div> {% endcomment %}
+                    <!--end::Aside column-->
+                    <!--begin::Main column-->
+                    <div class="d-flex flex-column flex-row-fluid gap-7 gap-lg-10">
+                        <ul class="nav nav-custom nav-tabs nav-line-tabs nav-line-tabs-2x border-0 fs-4 fw-semibold mb-n2">
+                            <!--begin:::Tab item-->
+                            <li class="nav-item" onclick='toggleButtons("property");'>
+                                <a class="nav-link text-active-primary pb-4 propert_details_nav active" data-bs-toggle="tab"
+                                    href="#create-or-update-property-management">General Details</a>
+                            </li>
+                            <!--end:::Tab item-->
+                            <!--begin:::Tab item-->
+                            <li class="nav-item" onclick='toggleButtons("room");'>
+                                <a class="nav-link text-active-primary pb-4 room_details_nav " data-bs-toggle="tab"
+                                    href="#create-or-update-room-deatils">Manual Booking</a>
+                            </li>
+                            <!--end:::Tab item-->
+                        </ul>   
+                        <!--begin::Tab content-->
+                        <div class="tab-content">
+                            <!--begin::Tab pane-->
+                            <div class="tab-pane fade show active" id="create-or-update-property-management" role="tab-panel">
+                                <div class="d-flex flex-column gap-7 gap-lg-10" id="property_details_section_div">
+    
+                                    
+                                    <div class="card card-flush py-4">
+                                        <div class="card-header">
+                                            <div class="card-title">
+                                                <h2>General Details</h2>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="card-body pt-0 ">
+                                            <div class="d-flex mb-10 flex-wrap gap-5 mt-10">
+                                                <div class="fv-row w-100 flex-md-root">
+                                                    <div class="mb-5 fv-row">
+                                                        <label class="required form-label">Name</label>
+                                                        <input type="text" name="name" value="{{ booked_price_obj.customer_details.full_name }}" class="form-control mb-2" placeholder="Enter Name" maxlength="40"/>
+                                                    </div>
+                                                </div>
+                                                <div class="fv-row w-100 flex-md-root">
+                                                    <div class="mb-5 fv-row">
+                                                        <label class="required form-label">Email</label>
+                                                        <input type="text" name="email" value="{{booked_price_obj.customer_details.email_address}}" class="form-control mb-2" placeholder="Enter Email" maxlength="40" />
+                                                    </div>
+                                                </div>
+                                                <div class="fv-row w-100 flex-md-root">
+                                                    <div class="mb-5 fv-row">
+                                                        <label class="required form-label">Phone</label>
+                                                        <input type="text" name="phone" value="{{booked_price_obj.customer_details.mobile_number}}" class="form-control mb-2" placeholder="Enter Phone Number" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1');" maxlength="10"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+    
+                                            <div class="d-flex mb-10 flex-wrap gap-5 mt-10">
+                                                <div class="fv-row w-100 flex-md-root">
+                                                    <div class="mb-5 fv-row">
+                                                        <label for="" class="form-label required">Check In</label>
+                                                        <input class="form-control form-control" name="check_in" placeholder="Pick Start date" value="{{booked_hotel_rooms_obj.booked_room.check_in |date:'Y-m-d' }}" id="start_datepicker"/>
+                                                    </div>
+                                                </div>
+                                                <div class="fv-row w-100 flex-md-root">
+                                                    <div class="mb-5 fv-row">
+                                                        <label for="" class="form-label required">Check Out</label>
+                                                        <input class="form-control form-control" name="checkout" placeholder="Pick End date" value="{{booked_hotel_rooms_obj.booked_room.check_out |date:'Y-m-d' }}" id="end_datepicker"/>
+                                                    </div>
+                                                </div>
+                                                <div class="fv-row w-100 flex-md-root">
+                                                    <div class="mb-5 fv-row">
+                                                        <label class="required form-label">Address</label>
+                                                        <textarea id="description"  class="form-control" name="address" placeholder="Enter Address"  maxlength="250" >{% if booked_price_obj.customer_details %} {{booked_price_obj.customer_details.guest_address | safe}} {% else %} Update Address {% endif %}</textarea>
+                                                        <div class="error-message" style="color: red;"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- <div class="d-flex mb-10 flex-wrap gap-5 mt-10">
+                                                <div class="fv-row w-100 flex-md-root">
+                                                    <div class="mb-5 fv-row">
+                                                        <label class="required form-label">Adults</label>
+                                                        <input type="text" name="adults" value="{{booked_price_obj.name}}" class="form-control mb-2" placeholder="Enter Number of Adults" maxlength="40"/>
+                                                    </div>
+                                                </div>
+                                                <div class="fv-row w-100 flex-md-root">
+                                                    <div class="mb-5 fv-row">
+                                                        <label class="required form-label">Childrens</label>
+                                                        <input type="text" name="childrens" value="{{booked_price_obj.name}}" class="form-control mb-2" placeholder="Enter Number of Childrens" maxlength="40"/>
+                                                    </div>
+                                                </div>
+                                            </div> -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade show" id="create-or-update-room-deatils" role="tab-panel">
+                                <div class="d-flex flex-column gap-7 gap-lg-10">
+                                    <div class="card card-flush">
+                                        
+                                        <div class="card-header">
+                                            <div class="card-title">
+                                                <h2>Room and User Details</h2>
+                                            </div>
+                                        </div>
+                                       
+                                        <div id="NewPropertyRoomRow"  class="container mt-5 ">
+                                            {% if booked_price_obj %}
+                                                {% for room_item in booked_room_list %}
+                                                    <div data-dynamic-room="room-details" data-dynamic-room-edit="room-details-edit" data-room-unique='{{forloop.counter}}'  class="add-room-div card-body pt-0 room-details-edit" style="border: 3px solid #ccc; padding: 20px; margin: 20px 0; border-radius: 20px; background-color: #f8f9fa;" id="{{forloop.counter}}">
+                                                        <div class="d-flex mb-4 flex-wrap gap-5 mt-10" >
+                                                            <div class="fv-row w-100 flex-md-root" style="padding-left: 26px;">
+                                                                <div class="mb-5 fv-row">
+                                                                    <label class="required form-label">Room Number</label>
+                                                                    <input type="text" name="room_number_{{forloop.counter}}"  class="form-control mb-2" placeholder="Enter Room Number" value="{{ room_item.room_sl_no }}" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="fv-row w-100 flex-md-root">
+                                                                <div class="mb-5 fv-row">
+                                                                    <label class="required form-label">Property</label>
+                                                                    <select class="form-select mb-2" data-control-select-option="property-name_{{forloop.counter}}" data-dynamic-room="room_types" id="property_name_{{forloop.counter}}" name="property_name_{{forloop.counter}}" data-unique-id="{{forloop.counter}}" data-handle-select-change="display_on" data-control="select2"  data-hide-search="false" data-placeholder="Select display on ">
+                                                                        <option ></option>
+                                                                        {% for property in  properties_queryset %}
+                                                                            <option {% if room_item.property_name.id|stringformat:'s' == property.id|stringformat:'s' %} selected  {% endif %} value="{{property.id}}">{{property.name}}</option>
+                                                                        {% endfor %}
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="fv-row w-100 flex-md-root">
+                                                                <div class="mb-5 fv-row">
+                                                                    <label class="required form-label">Rooms</label>
+                                                                    <select class="form-select mb-2" data-control-select-option="room-name_{{forloop.counter}}" name="room_name_{{forloop.counter}}" data-handle-select-change="display_on" data-control="select2"  data-hide-search="false" data-placeholder="Select display on ">
+                                                                        <option></option>
+                                                                        {% for room in  room_item.room_queryset %}
+                                                                            <option {% if room.hotel_room.id|stringformat:'s' == room_item.room_name.id|stringformat:'s' %} selected  {% endif %} value="{{room.id}}">{{room.hotel_room.room_type.name}}</option>
+                                                                        {% endfor %}
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="fv-row w-100 flex-md-root" style="padding-left: 26px;">
+                                                                <div class="mb-5 fv-row">
+                                                                    <label class="required form-label">Number of Adults</label>
+                                                                    <input type="text" name="no_of_adults_{{forloop.counter}}"  class="form-control mb-2" placeholder="Number of Customers" value="{{ room_item.no_of_adults}}"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="fv-row w-100 flex-md-root" style="padding-left: 26px;">
+                                                                <div class="mb-5 fv-row">
+                                                                    <label class="form-label">Number of Childrens</label>
+                                                                    <input type="text" name="no_of_childrens_{{forloop.counter}}"  class="form-control mb-2" placeholder="Number of Customers" value="{{ room_item.no_of_childrens }}"/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div id='user_details_{{forloop.counter}}'>
+                                                            {% for customer_item in room_item.customer_details %}
+                                                                                
+                                                                <div class='row d-flex align-items-center customer-edit-details' 
+                                                                data-user-details='user_details' 
+                                                                data-customer-details='customer-details_{{ forloop.parentloop.counter }}'   
+                                                                data-customer-unique-id='customer-unique-id{{ forloop.parentloop.counter }}{{forloop.counter}}'   
+                                                                user-unique-id='{{ forloop.parentloop.counter }}{{forloop.counter}}' 
+                                                                data-customer-id='{{customer_item.customer_details_id}}'>
+                                                                    <div class='col-lg-10'>
+                                                                        <div class="d-flex mb-4 mr-5 flex-wrap gap-5 mt-10">
+                                                                            <div class="fv-row w-100 flex-md-root" style="padding-left: 26px;">
+                                                                                <div class="mb-5 fv-row">
+                                                                                    <label class="required form-label">Full Name</label>
+                                                                                    <input type="text" name="full_name_{{ forloop.parentloop.counter }}{{forloop.counter}}"  class="form-control mb-2" placeholder="Enter Full Name" value="{{ customer_item.full_name}}" />
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="fv-row w-100 flex-md-root">
+                                                                                <div class="mb-5 fv-row">
+                                                                                    <label class="required form-label">Email</label>
+                                                                                    <input type="text" name="email_{{ forloop.parentloop.counter }}{{forloop.counter}}"  class="form-control mb-2" placeholder="Enter Email" value="{{ customer_item.email_address}}" />
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="fv-row w-100 flex-md-root">
+                                                                                <div class="mb-5 fv-row">
+                                                                                    <label class="required form-label">Phone Number</label>
+                                                                                    <input type="text" name="phone_number_{{ forloop.parentloop.counter }}{{forloop.counter}}"  class="form-control mb-2" placeholder="Enter Phone Number" value="{{ customer_item.mobile_number }}"/>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="fv-row w-100 flex-md-root">
+                                                                                <div class="mb-5 fv-row">
+                                                                                    <label for="" class="form-label required">Date of Birth</label>
+                                                                                    <input type="Date" class="form-control form-control" name="dob_{{ forloop.parentloop.counter }}{{forloop.counter}}" placeholder="Enter Date of Birth" value="{{customer_item.dob |date:'Y-m-d' }}" />
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="fv-row" style="padding-left: 26px;">
+                                                                            <div class="dropzone property_room_images_dropzone_{{ forloop.parentloop.counter }}{{forloop.counter}}" data-coustomer_loopcount="{{ forloop.parentloop.counter }}{{forloop.counter}}" id="property_room_images_dropzone_{{ forloop.parentloop.counter }}{{forloop.counter}}">
+                                                                                <div class="dz-message needsclick">
+                                                                                    <i class="bi bi-file-earmark-arrow-up text-primary fs-3x"></i>
+                                                                                    <div class="ms-4">
+                                                                                        <h3 class="fs-5 fw-bold text-gray-900 mb-1">Drop files here or click to upload.</h3>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <span class="fs-7 fw-semibold text-gray-400" id="uploadInfo" >Dimensions 432 x 263px , .jpeg, .jpg, .png, .pdf are accepted.</span>
+                                                                            <span class="fs-7 fw-semibold text-gray-400" id="uploadInfo" >Upload up to 1 files (max 1MB each)</span>
+                                                                            <input type="hidden" name="document_base_64_{{ forloop.parentloop.counter }}{{forloop.counter}}"  class="form-control mb-2" placeholder="Enter Email" value="{{ customer_item.document}}" />
+                                                                        
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class='col-lg-2'>
+                                                                        <div class='text-center'>
+                                                                            <button type='button'  delete-id='{{forloop.counter}}' data-control-room="delete_user_details" class="btn btn-danger mt-10 delete_user_details" onclick='deleteUserDEtails({{ forloop.parentloop.counter }}{{forloop.counter}})' >Delete</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            {% endfor %}
+                                                        </div>
+                                                        <button id="add_user_details_{{forloop.counter}}" unique-id="{{forloop.counter}}" data-control-room="add_user_details" class="btn btn-primary mt-10 " type='button'>Add new</button>
+                                                            <button id="DeleteRoomButton" data-control-room="delete_room_buttons" class="btn btn-danger mt-10" style="margin-left: 26px;" type='button'>Delete</button>
+                                                    </div>
+                                                {% endfor %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--end::Tab pane-->
+                        </div>
+                        <!--end::Tab content-->
+                        <div class="d-flex justify-content-end">
+                            <!--begin::Button-->
+                            {% comment %} <button id="add_new_room_btn" class="btn btn-primary mt-8">Add New</button> {% endcomment %}
+                            <a href="{% url 'bookings:manual_booking.index' %}" class="btn btn-light me-4">Cancel</a>
+                            <a href="javascript:void(0)" id="add_new_room_btn" class="btn btn-light-primary me-4">Add New</a>
+                            
+                            
+                            <!--end::Button-->
+                            <!--begin::Button-->
+                            <button type="submit" id="create-or-update-vehicle-submit" class="btn btn-success me-4">
+                                <span class="indicator-label">Save </span>
+                                <span class="indicator-progress">Please wait...
+                                <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                            </button>
+                            <a href="#create-or-update-property-management" id="previous_page_btn" class="btn btn-secondary me-4">Previous Page</a>
+                            <a href="#create-or-update-room-deatils" id="next_page_btn" class="btn btn-secondary me-4">Next Page</a>
+                            
+                            <!--end::Button-->
+                        </div>
+                    </div>
+                    <!--end::Main column-->
+                </form>
+                <!--end::Form-->
+            </div>
+            <!--end::Content container-->
+        </div>
+        <!--end::Content-->
+    </div>
+    <!--end::Content wrapper-->
+	
+{% endblock content %}
+
+
+
+{% block script %}
+<script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCnDgIL3Hp0Bhzf9yuOtn4qAIVnAnzvRJE&libraries=places" ></script>
+
+<script>
+    var masterObject = {};
+
+    var property_options = `
+                            {% for property in properties_queryset %}
+                                <option value="{{property.id}}"  >{{property.name}}</option>
+                            {% endfor %}`
+
+    var room_options = `{% for hotel_room in hotel_rooms_obj %}
+                                <option value="{{hotel_room.id}}">{{hotel_room.name}}</option>
+                            {% endfor %}`
+
+    var api_config = {
+        "property_image_upload_api_url": "{% url 'property_management:property_management.image.upload' %}",
+        "uuid" : "{{uuid}}",
+        "csrfmiddlewaretoken" : "{{ csrf_token }}",
+        "temporary_image_destroy_api_url" : "{% url 'property_management:property_management.temporary.image.destroy' %}",
+        "get_customer_images_api_url" : "{% url 'bookings:get.bookings_customer.images' %}",
+        "get_property_room_images_api_url" : "{% url 'property_management:get.room.images' %}",
+        "booked_room_id" : "{{booked_price_obj.id}}",
+        "get_city" : "{% url 'offer_management:room_list.get' %}",
+    }
+
+
+    // Initialize Flatpickr
+    const startDatePicker = flatpickr("#start_datepicker", {
+        minDate: "today", // Prevent selecting past dates
+        dateFormat: "Y-m-d", // Date format
+        onChange: function(selectedDates, selectedDate) {
+            endDatePicker.set("minDate", selectedDate); // Set min date for end date picker based on selected start date
+            if (selectedDate >= endDatePicker.selectedDates[0]) {
+                endDatePicker.clear(); // Clear end date if it's less than start date
+            }
+        }
+    });
+    
+    // Initialize Flatpickr for end date
+    const endDatePicker = flatpickr("#end_datepicker", {
+        minDate: "today", // Prevent selecting past dates
+        dateFormat: "Y-m-d", // Date format
+    });
+
+        
+
+    $(document).ready(function () {
+        // Handle "Next Page" button click event
+        $("#next_page_btn").on("click", function (e) {
+            e.preventDefault();
+            switchTabs("#create-or-update-room-deatils");
+            $('#create-or-update-vehicle-submit').show();
+            $('#add_new_room_btn').show();
+            $('#previous_page_btn').show();
+            $('#next_page_btn').hide();
+            $('.room_details_nav').addClass("show active");
+            $('.propert_details_nav').removeClass("show active");
+            
+        });
+
+        // Handle "Previous Page" button click event
+        $("#previous_page_btn").on("click", function (e) {
+            e.preventDefault();
+            switchTabs("#create-or-update-property-management");
+            $('#add_new_room_btn').hide()
+            $('#create-or-update-vehicle-submit').hide()
+            $('#next_page_btn').show()
+            $('#previous_page_btn').hide()
+            $('.propert_details_nav').addClass("show active");
+            $('.room_details_nav').removeClass("show active");
+            
+        });
+
+        // Function to switch tabs
+        function switchTabs(targetTabId) {
+            // Remove the "show" class from all tabs
+            $(".tab-pane").removeClass("show active");
+
+            // Add the "show" class to the target tab
+            $(targetTabId).addClass("show active");
+
+            // Optionally, scroll to the target tab
+            $("html, body").animate({
+                scrollTop: $(targetTabId).offset().top
+            }, 500);
+        }
+    });
+    function deleteUserDEtails(unique_id){
+        console.log('delete',unique_id)
+        let userDetails = document.querySelectorAll('[data-user-details="user_details"]')
+        if(userDetails?.length > 1){
+            var index = ''
+            userDetails.forEach((item,ind)=>{
+                if(item.getAttribute('user-unique-id') == unique_id){
+                    index = ind
+                }
+            })
+            userDetails[index].remove();
+        }
+    }
+    </script>
+
+<script src="{% static 'assets/js/custom/pages/home-page/bookings/manual-room-booking/create-or-update-manual-room-booking.js' %}?time={% now 'h:i:s' %}"></script>
+
+
+
+
+{% endblock script %}

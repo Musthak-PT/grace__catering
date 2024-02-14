@@ -1,0 +1,203 @@
+{% extends 'admin/layouts/apps.html' %}
+{% load static %}
+
+
+{% block content %}
+
+<!--begin::Content wrapper-->
+<div class="d-flex flex-column flex-column-fluid">
+    {% include 'admin/layouts/breadcrumbs.html' %}
+    <!--begin::Content-->
+    <div id="kt_app_content" class="app-content flex-column-fluid">
+        <!--begin::Content container-->
+        <div id="kt_app_content_container" class="app-container container-xxl">
+            <!--begin::Form-->
+            <form id="create-or-update-customer-promotion-form" class="form d-flex flex-column flex-lg-row" method="POST"
+                enctype="multipart/form-data" action="{% url 'customer_management:customer_promotion.create' %}">
+                {% csrf_token %}
+                <input type="hidden" name="customer_promotion_id" value="{{promotion_obj.id}}" />
+                <input type="text" name="err_message" value="{{ err_message }}" id="err_message" style="display: none;" />
+                <div class="d-flex flex-column gap-7 gap-lg-10 w-100 w-lg-300px mb-7 me-lg-10">
+                    <!--begin::Logo settings-->
+                    <div class="card card-flush py-4">
+                        
+                        <div class="card-header">
+                            <!--begin::Card title-->
+                            <div class="card-title">
+                                <h2>Image</h2>
+                            </div>
+                            <!--end::Card title-->
+                        </div>
+                        
+                        
+                        <div class="fv-row card-body text-center pt-0 ">
+                            <!--begin::Thumbnail input-->
+                            <div id='promotion-image-view' class="image-input image-input-empty image-input-outline mb-3" data-kt-image-input="true" {% if promotion_obj.image is not None %} style="background-image: url({{ promotion_obj.image.url }})" data-image-edit='true' {% else %} style="background-image: url({% static 'assets/media/svg/files/blank-image.svg' %})" data-image-edit='false' {% endif %}  >
+                                <!--begin::Preview existing user image-->
+                                <div class="image-input-wrapper w-150px h-150px"></div>
+                                <!--end::Preview existing user image-->
+                                
+                                <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Select image">
+                                    <i class="bi bi-pencil-fill fs-7"></i>
+                                    <!--begin::Inputs-->
+                                    <input type="file" name="promotion_image" accept=".png, .jpg, .jpeg"/>
+                                    <input type="hidden" name="admin_image_remove" />
+                                    <!--end::Inputs-->
+                                </label>
+                                
+                                <!--begin::Cancel-->
+                                <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="Cancel image">
+                                    <i class="bi bi-x fs-2"></i>
+                                </span>
+                                <!--end::Cancel-->
+                                <!--begin::Remove-->
+                                <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="remove" data-bs-toggle="tooltip" title="Remove avatar">
+                                    <i class="bi bi-x fs-2"></i>
+                                </span>
+                                <!--end::Remove-->
+                            </div>
+                            <!--end::Thumbnail input-->
+                            
+                            <div class="text-muted fs-7">Choose image with dimension 670 x 350 pixels, in either *.png, *.jpg, or *.jpeg formats, and ensure that the image size is below 1 MB.</div>
+                            
+                        </div>
+                        <!--end::Card body-->
+                    </div>
+                    <!--end::Logo settings-->
+                    <!--end::Status-->
+          
+                   
+                </div>
+                <!--begin::Aside column-->
+                <!--begin::Main column-->
+                <div class="d-flex flex-column flex-row-fluid gap-7 gap-lg-10">
+                    <!--begin::Tab content-->
+                    <div class="tab-content">
+                        <!--begin::Tab pane-->
+                        <div class="tab-pane fade show active" id="create-or-update-user-general" role="tab-panel">
+                            <div class="d-flex flex-column gap-7 gap-lg-10">
+                                <div class="card card-flush py-4">
+                                    <div class="card-header">
+                                        <div class="card-title">
+                                            <h2>Customer Promotion</h2>
+                                        </div>
+                                    </div>
+                                    <div class="card-body pt-0 ">
+                                        <div class="d-flex mb-10 flex-wrap gap-5 mt-10">
+                                            <div class="fv-row w-100 flex-md-root">
+                                                <div class="mb-5 fv-row">
+                                                    <label class="required form-label">Title</label>
+                                                    <input type="text" name="title" value="{{promotion_obj.title}}" class="form-control mb-2" placeholder="Enter Title" maxlength="40"/>
+                                                </div>
+                                            </div>
+                                            <div class="fv-row w-100 flex-md-root">
+                                                <div class="mb-5 fv-row">
+                                                    <label class="required form-label">Subject</label>
+                                                    <input type="text" name="subject" value="{{promotion_obj.subject}}" class="form-control mb-2" placeholder="Enter Subject" maxlength="40"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex mb-10 flex-wrap gap-5 mt-10">
+                                            <div class="fv-row w-100 flex-md-root">
+                                                <div class="mb-5 fv-row">
+                                                    <label class="required form-label">Message</label>
+                                                    <textarea id="description"  class="form-control" name="message" placeholder="Enter Message"  maxlength="1000">{{promotion_obj.message | safe}}</textarea>
+                                                </div>
+                                            </div>
+                                            <div class="fv-row w-100 flex-md-root">
+                                                <div class="mb-5 fv-row">
+                                                    <label class="required form-label">Customers</label>
+                                                    <select id="roomSelect" class="form-select mb-2" name="customers" data-control-select-option="property-name" data-control="select2" data-hide-search="false" data-placeholder="Select an option" multiple>
+                                                        <option value="all">Select All</option>
+                                                        <option></option>
+                                                        {% for user in user_queryset %}
+                                                            <option {% if user.email in promotion_customer_ids_email %} selected {% endif %} value="{{user}}">{{user.full_name}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <!--end::Tab pane-->
+                        </div>
+
+                        
+                        <!--end::Tab content-->
+                        <div class="d-flex justify-content-end" style='padding-top: 20px;'>
+                            <!--begin::Button-->
+                            <a href="{% url 'customer_management:customer_promotion.index' %}" id="kt_ecommerce_add_product_cancel"
+                                class="btn btn-light me-5">Cancel</a>
+                            <!--end::Button-->
+                            <!--begin::Button-->
+                            <!-- <button type="submit" id="create-or-update-customer-promotion-submit" class="btn btn-primary">
+                                <span class="indicator-label" >Save </span>
+                                </button>
+                                <button type="button" id="banner-loader-text" class="indicator-progress btn btn-primary">
+                                <span class="">Please wait...
+                                <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                            </button> -->
+                            <button type="submit" id="create-or-update-customer-promotion-submit" class="btn btn-primary">
+                                <span class="indicator-label">Save</span>
+                                <span class="indicator-progress">Please wait...
+                                <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                            </button>
+                            
+                            <!--end::Button-->
+                        </div>
+                    </div>
+                    <!--end::Main column-->
+            </form>
+            <!--end::Form-->
+        </div>
+        <!--end::Content container-->
+    </div>
+    <!--end::Content-->
+</div>
+<!--end::Content wrapper-->
+{% endblock content %}
+{% block script %}
+
+<script src="{% static 'assets/js/custom/pages/home-page/customer-promotion/create-or-update-customer-promotion.js' %}?time={% now 'h:i:s' %}">
+    </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var submitButton = document.getElementById('create-or-update-vehicle-submit');
+        var label = submitButton.querySelector('.indicator-label');
+        var progress = submitButton.querySelector('.indicator-progress');
+        var isSubmitting = false; // Flag to track submission state
+    
+        submitButton.addEventListener('click', function (event) {
+            event.preventDefault(); // Prevent default form submission
+    
+            // If already submitting, return early
+            if (isSubmitting) {
+                return;
+            }
+    
+            // Set flag to indicate submission is in progress
+            isSubmitting = true;
+    
+            // Disable the button and show the loader
+            submitButton.disabled = true;
+            label.classList.add('d-none');
+            progress.classList.remove('d-none');
+    
+            // Simulate form submission (replace with actual submission logic)
+            setTimeout(function () {
+                // Re-enable the button and hide the loader after some time (replace with actual submission completion logic)
+                submitButton.disabled = false;
+                label.classList.remove('d-none');
+                progress.classList.add('d-none');
+                
+                // Reset flag after submission completes
+                isSubmitting = false;
+            }, 1000); // Change 3000 to the time your submission logic takes in milliseconds
+        });
+    });
+</script>
+    
+{% endblock script %}
