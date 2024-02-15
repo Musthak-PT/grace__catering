@@ -1,83 +1,67 @@
 {% extends 'admin/layouts/apps.html' %}
 {% load static %}
 
-
 {% block content %}
-
-	<!--begin::Content wrapper-->
+    <!--begin::Content wrapper-->
     <div class="d-flex flex-column flex-column-fluid">
-        
-        
-
         {% include 'admin/layouts/breadcrumbs.html' %}
-
-
-
 
         <!--begin::Content-->
         <div id="kt_app_content" class="app-content flex-column-fluid">
             <!--begin::Content container-->
             <div id="kt_app_content_container" class="app-container container-xxl">
                 <!--begin::Form-->
-                <form id="create-or-update-campaign-form" class="form d-flex flex-column flex-lg-row"  method="POST" enctype="multipart/form-data"  action="{% url 'product:product.create' %}">
+                <form id="create-or-update-campaign-form" class="form d-flex flex-column flex-lg-row" method="POST" enctype="multipart/form-data" action="{% url 'product:product.create' %}">
                     {% csrf_token %}
                     <input type="hidden" name="instance_id" id="casestudy_id" value="{{instance.id}}" />
 
-                    
-                    <!--end::Aside column-->
+                    <!--begin::Aside column-->
                     <!--begin::Main column-->
                     <div class="d-flex flex-column flex-row-fluid gap-7 gap-lg-10">
-                        <!--begin:::Tabs-->
+                        <!--begin::Tabs-->
                         <ul class="nav nav-custom nav-tabs nav-line-tabs nav-line-tabs-2x border-0 fs-4 fw-bold mb-n2">
-                            <!--begin:::Tab item-->
+                            <!--begin::Tab item-->
                             <li class="nav-item">
-                                <a class="nav-link text-active-primary pb-4 active" data-bs-toggle="tab" href="#create-or-update-admin-general">Campaign Management</a>
+                                <a class="nav-link text-active-primary pb-4 active" data-bs-toggle="tab" href="#create-or-update-admin-general">Product Management</a>
                             </li>
-                            <!--end:::Tab item-->
-                      
+                            <!--end::Tab item-->
                         </ul>
-                        <!--end:::Tabs-->
+                        <!--end::Tabs-->
                         <!--begin::Tab content-->
                         <div class="tab-content">
                             <!--begin::Tab pane-->
                             <div class="tab-pane fade show active" id="create-or-update-admin-general" role="tab-panel">
                                 <div class="d-flex flex-column gap-7 gap-lg-10">
-                                    
                                     <div class="card card-flush py-4">
-                                        
                                         <div class="card-header">
                                             <div class="card-title">
                                                 <h2>Product Management</h2>
                                             </div>
                                         </div>
-                                        
-                                        <div class="card-body pt-0 ">                                
+                                        <div class="card-body pt-0 ">
                                             <div class="d-flex mb-10 flex-wrap gap-5 mt-10">
                                                 <div class="fv-row w-100 flex-md-root">
                                                     <div class="mb-5 fv-row">
                                                         <label class="required form-label">Product Name</label>
-                                                        <input type="text" name="product_name" value="{{instance.product_name}}" class="form-control mb-2" maxlength='40' placeholder="Enter Product Name"   />
+                                                        <input type="text" name="product_name" value="{{instance.product_name}}" class="form-control mb-2" maxlength='40' placeholder="Enter Product Name" />
                                                     </div>
                                                 </div>
                                                 <div class="fv-row w-100 flex-md-root">
                                                     <div class="mb-5 fv-row">
-                                                        <label class="required form-label">Communication Platform</label>
-                                                        <select name="communication_platform" class="form-control mb-2">
-                                                            <option value="" {% if not instance.communication_platform %}selected{% endif %}>Select Communication Platform</option>
-                                                            <option value="1" {% if instance.communication_platform == '1' %}selected{% endif %}>Whatsapp</option>
-                                                            <option value="2" {% if instance.communication_platform == '2' %}selected{% endif %}>SMS</option>
-                                                            <option value="3" {% if instance.communication_platform == '3' %}selected{% endif %}>Email</option>
+                                                        <label class="required form-label">Category</label>
+                                                        <select name="category" class="form-control mb-2">
+                                                            <option value="" {% if not instance.category %}selected{% endif %}>Select Category</option>
+                                                            {% for category in categories %}
+                                                                <option value="{{ category.id }}" {% if instance.category and instance.category.id == category.id %}selected{% endif %}>{{ category.category_name }}</option>
+                                                            {% endfor %}
                                                         </select>
                                                     </div>
-                                                </div>                                            
+                                                </div>
                                             </div>
-                                                                                        
-                                        </div>                                        
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-    
-    
                             <!--end::Tab pane-->
                         </div>
                         <!--end::Tab content-->
@@ -88,8 +72,9 @@
                             <!--begin::Button-->
                             <button type="submit" id="create-or-update-campaign-submit" class="btn btn-primary">
                                 <span class="indicator-label">Save </span>
-                                <span class="indicator-progress" id="banner-loader-text">Please wait... 
-                                <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                <span class="indicator-progress" id="banner-loader-text">Please wait...
+                                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                </span>
                             </button>
                             <!--end::Button-->
                         </div>
@@ -103,26 +88,16 @@
         <!--end::Content-->
     </div>
     <!--end::Content wrapper-->
-	
 {% endblock content %}
 
- 
-
 {% block script %}
-        
-
     <script src="{% static 'assets/js/custom/pages/home-page/product/product-create-or-update.js' %}?time={% now 'h:i:s' %}">
-
     </script>
     <script>
         flatpickr("#schedule_time", {
             enableTime: true,
             dateFormat: "d-m-Y h:i K",
-            // dateFormat: "Y-m-d H:i:S.uO",
             time_24hr: false, // Set to false for 12-hour time format
         });
     </script>
-
-
-
 {% endblock script %}

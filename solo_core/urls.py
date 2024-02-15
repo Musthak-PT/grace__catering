@@ -65,6 +65,7 @@ urlpatterns = [
     path('booking-management/', include('apps.bookings.urls')),
     path('category/', include('apps.category.urls')),
     path('product/', include('apps.product.urls')),
+    path('user-management/', include('apps.user_management.urls')),
     
     
     

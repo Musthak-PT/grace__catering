@@ -16,12 +16,13 @@ import json
 from solo_core.helpers.helper import ConvertBase64File
 from uuid import uuid4
 from apps.product.models import Product
+from apps.category.models import Category
 # Create your views here.
 class ProductView(View):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.context = {"breadcrumbs": []}
-        self.template = 'admin/home-page/product/product-create-or-update.html'
+        self.template = 'admin/home-page/product/product-list.html'
         self.context['title'] = 'Product'
         self.generateBreadcrumbs()
 
@@ -51,8 +52,9 @@ class LoadProductDatatable(BaseDatatableView):
         print("Search Value:", search)
         if search:
             qs = qs.filter(
-                Q(product_name__istartswith=search)
-            )
+            Q(product_name__istartswith=search) |
+            Q(category__category_name__istartswith=search)
+        )
         return qs
 
     def prepare_results(self, qs):
@@ -61,26 +63,28 @@ class LoadProductDatatable(BaseDatatableView):
             json_data.append({
                 'id'              : escape(item.id),
                 'product_name'    : escape(item.product_name),
-                'category_name'   : escape(item.category.category_name),
+                'category_name'   : escape(item.category.category_name) if item.category else '',
                 'is_active'       : escape(item.is_active),
                 'encrypt_id'      : escape(URLEncryptionDecryption.enc(item.id))
             })
         return json_data
-    
-
 class ProductCreateOrUpdateView(View):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.context = {"breadcrumbs": [], }
         self.action = "Create"
         self.context['title'] = 'Product'
-        self.template = ''
+        self.template = 'admin/home-page/product/product-create-or-update.html'
 
     def get(self, request, *args, **kwargs):
         id = URLEncryptionDecryption.dec(kwargs.pop('id', None))
         if id:
             self.action = "Update"
             self.context['instance'] = get_object_or_404(Product, id=id)
+
+        # Retrieve categories and add them to the context
+        categories = Category.objects.filter(is_active=True)
+        self.context['categories'] = categories
 
         self.generateBreadcrumbs()
         return render(request, self.template, context=self.context)
@@ -96,21 +100,62 @@ class ProductCreateOrUpdateView(View):
             if instance_id:
                 self.action = 'Updated'
                 instance = get_object_or_404(Product, id=instance_id)
-                instance.updated_by = request.user
             else:
                 instance = Product()
-                instance.campaign = True
-                instance.user = request.user
                 self.action = 'Created'
-            # Set other fields
+
             instance.product_name = request.POST.get('product_name', None)
+            category_id = request.POST.get('category', None)
+            if category_id:
+                category = Category.objects.get(id=category_id)
+                instance.category = category
+            else:
+                instance.category = None
+
             instance.created_by = request.user
             instance.save()
 
             messages.success(request, f"Data Successfully " + self.action)
         except Exception as e:
-            messages.error(request, f"Something went wrong. {str(e)}")
+            messages.error(request, f"Something went wrong." + str(e))
             if instance_id is not None and instance_id != '':
                 return redirect('product:product.update', id=URLEncryptionDecryption.dec(int(instance_id)))
             return redirect('product:product.create')
-        return redirect('product:product-view.index')
+        return redirect('product:product.index')
+
+class DestroyProductRecordsView(View):
+    def __init__(self, **kwargs):
+        self.response_format = {"status_code": 101, "message": "", "error": ""}
+
+    def post(self, request, *args, **kwargs):
+        try:
+            instance_id = request.POST.getlist('ids[]')
+            if instance_id:
+                Product.objects.filter(id__in=instance_id).delete()
+                self.response_format['status_code'] = 200
+                self.response_format['message'] = 'Success'
+        except Exception as e:
+            self.response_format['message'] = 'error'
+            self.response_format['error'] = str(e)
+        return JsonResponse(self.response_format, status=200)
+
+class ProductStatusChange(View):
+    def __init__(self, **kwargs):
+        self.response_format = {"status_code": 101, "message": "", "error": ""}
+
+    def post(self, request, **kwargs):
+        try:
+            instance_id = request.POST.get('id', None)
+            instance = Product.objects.get(id=instance_id)
+            if instance_id:
+                if instance.is_active:
+                    instance.is_active = False
+                else:
+                    instance.is_active = True
+                instance.save()
+                self.response_format['status_code'] = 200
+                self.response_format['message'] = 'Success'
+        except Exception as es:
+            self.response_format['message'] = 'error'
+            self.response_format['error'] = str(es)
+        return JsonResponse(self.response_format, status=200)

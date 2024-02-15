@@ -49,7 +49,7 @@
                         {% endwith %}
                         <!--begin::Add product-->
                         {% if request.user|check_permission:'auth.create_category' %}
-                        <a href="{% url 'category:category.create' %}" class="btn btn-primary">Create</a>
+                        <a href="{% url 'product:product.create' %}" class="btn btn-primary">Create</a>
                         <!--end::Add product-->
                         {%endif%}
                     </div>

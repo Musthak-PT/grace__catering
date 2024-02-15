@@ -1,0 +1,141 @@
+{% extends 'admin/layouts/apps.html' %}
+{% load static %}
+{% block content %}
+{% load permission_tag %}
+
+
+	<!--begin::Content wrapper-->
+    <div class="d-flex flex-column flex-column-fluid">
+        
+        
+
+        {% include 'admin/layouts/breadcrumbs.html' %}
+
+
+    <!--begin::Content-->
+    <div id="kt_app_content" class="app-content flex-column-fluid">
+        <!--begin::Content container-->
+        <div id="kt_app_content_container" class="app-container container-md">
+            <!--begin::Products-->
+            <div class="card card-flush">
+                <!--begin::Card header-->
+                <div class="card-header align-items-center py-3 py-md-4">
+                    <!--begin::Card title-->
+                    <div class="card-title">
+                        <!--begin::Search-->
+                        <div class="d-flex align-items-center position-relative">
+                            <span class="svg-icon svg-icon-1 position-absolute ms-3" style="font-size: 16px;">
+                                <!-- Your SVG Icon Code -->
+                            </span>
+                            <input type="text" data-users-table-filter="search" class="form-control form-control-solid ps-4" placeholder="Search" />
+                        </div>
+                        <!--end::Search-->
+                    </div>
+                    <!--end::Card title-->
+                    <!--begin::Card toolbar-->
+                    <div class="card-toolbar flex-row-fluid justify-content-end gap-5" data-table-toolbar="base">
+                        <div class="w-100 mw-150px">
+                            <!--begin::Select2-->
+                            <select class="form-select form-select-solid" data-control="select2" data-hide-search="true" data-placeholder="Status" data-users-filter="status">
+                                <option></option>
+                                <option value="all">All</option>
+                                <option value="1">Active</option>
+                                <option value="2">Inactive</option>
+                            </select>
+                            <!--end::Select2-->
+                        </div>
+                        <!--begin::Add product-->
+                        
+
+
+                        <div class="fv-row w-100 flex-md-root">
+                            <div class="mb-5 fv-row">
+                                <label for="" class="form-label required">Date Range</label>
+                                <input type="text" name="datefilter" data-users-filter="date_range" class="form-control form-control" value="" placeholder="Pick the date range" />
+                            </div>
+                        </div>
+
+                        
+
+                        {% with permission_result=request.user|check_permission:'auth.delete_users' %}
+                        <input type="hidden" id="userDelete" value="{{ permission_result }}">
+                        {% endwith %}
+                        {% with permission_result=request.user|check_permission:'auth.edit_users' %}
+                        <input type="hidden" id="userEdit" value="{{ permission_result }}">
+                        {% endwith %}
+                        <!--begin::Add product-->
+                        {% if request.user|check_permission:'auth.create_users' %}
+                        <a href="{% url 'account:user.create' %}" class="btn btn-primary">Create</a>
+                        {%endif%}
+
+                        <!--end::Add product-->
+                    </div>
+
+                    <div class="d-flex justify-content-end align-items-center d-none mt-2" data-users-table-toolbar="selected">
+                        <div class="fw-bolder me-3">
+                            <span class="me-2" data-users-table-select="selected_count"></span>Selected
+                        </div>
+                        <button type="button" class="btn btn-sm btn-danger" data-users-table-select="delete_selected">Delete Selected</button>
+                    </div>
+                    <!--end::Card toolbar-->
+                </div>
+                <!--end::Card header-->
+                <!--begin::Card body-->
+                <div class="card-body pt-0">
+                    <!--begin::Table-->
+                    <div class="table-responsive">
+                        <table class="table align-middle table-row-dashed fs-6 gy-3" id="company-profile-datatable">
+                            <!--begin::Table head-->
+                            <thead style="font-size: 12px; line-height: 1;">
+                                <!--begin::Table row-->
+                                <tr class="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
+                                    <th class="w-8px pe-2">
+                                        <div class="form-check form-check-sm form-check-custom form-check-solid me-2">
+                                            <input class="form-check-input" type="checkbox" data-kt-check="true" data-kt-check-target="#users-datatable .form-check-input" value="1" />
+                                        </div>
+                                    </th>                                    
+                                    <th class="min-w-155px">First Name</th>
+                                    <th class="min-w-155px">Last Name</th>
+                                    <th class="min-w-155px">Email</th>
+                                    <th class="min-w-155px">Joined Date</th>
+                                    <th class="min-w-155px">Status</th>
+                                    <th class="text-end min-w-100px">Actions</th>                                    
+                                </tr>
+                                <!--end::Table row-->
+                            </thead>
+                            
+                            <!--end::Table head-->
+                            <!--begin::Table body-->
+                            <tbody class="fw-semibold text-gray-600">
+                                <!-- Your Table Rows -->
+                                <!-- Add more rows as needed -->
+                            </tbody>
+                            <!--end::Table body-->
+                        </table>
+                    </div>
+                    <!--end::Table-->
+                </div>
+                <!--end::Card body-->
+            </div>
+            <!--end::Products-->
+        </div>
+        <!--end::Content container-->
+    </div>
+    <!--end::Content-->
+</div>
+
+{% endblock content %}
+
+{% block script %}
+<script>
+    var api_config = {
+        'datatable': "{% url 'account:load.user.datatable'%}",
+        'csrfmiddlewaretoken': '{{ csrf_token }}',
+        'active_inactive_company': "{% url 'account:active.or.inactive.user' %}",
+        'edit_url': "{% url 'account:user.update' '0' %}",
+        'delete_records': "{% url 'account:user.records.destroy' %}",
+    };
+        
+</script>
+<script src="{% static 'assets/js/custom/pages/home-page/user-management/user-datatable.js' %}?time={% now 'h:i:s' %}"></script>
+{% endblock script %}
