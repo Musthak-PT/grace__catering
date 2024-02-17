@@ -78,8 +78,10 @@
                                         <input class="form-check-input" type="checkbox" data-kt-check="true" data-kt-check-target="#admins-datatable .form-check-input" value="1" />
                                     </div>
                                 </th>
+                                <th class="min-w-155px">Serial No</th>    
                                 <th class="min-w-155px">Name</th>
                                 <th class="min-w-155px">Email</th>
+                                <th class="min-w-155px">Mobile Number</th>
                                 <th class="min-w-125px">Status</th>
                                 <th class="text-end min-w-100px">Actions</th>
                             </tr>
@@ -112,9 +114,9 @@
         var api_config= {
             'datatable' : "{% url 'admins:load.admins.datatable' %}",
             'csrfmiddlewaretoken' : '{{ csrf_token }}',
-            'active_inactive_company': "{% url 'admins:active.or.inactive.admins_status' %}",
             'delete_records' : "{% url 'admins:admins.records.destroy' %}",
             'edit_url' : "{% url 'admins:admins.update' '0' %}",
+            'active_inactive_company'   : "{% url 'admins:active.or.inactive.admins_status' %}",
         };
        
     </script>

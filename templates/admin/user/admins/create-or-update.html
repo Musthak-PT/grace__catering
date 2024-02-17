@@ -26,9 +26,9 @@
                     <!--begin::Aside column-->
                     <div class="d-flex flex-column gap-7 gap-lg-10 w-100 w-lg-300px mb-7 me-lg-10">
                         <!--begin::Logo settings-->
-                        <div class="card card-flush py-4">
+                        {% comment %} <div class="card card-flush py-4"> {% endcomment %}
                             
-                            <div class="card-header">
+                            {% comment %} <div class="card-header">
                                 <!--begin::Card title-->
                                 <div class="card-title">
                                     <h2>Thumbnail</h2>
@@ -44,7 +44,7 @@
                                     <div class="image-input-wrapper w-150px h-150px"></div>
                                     <!--end::Preview existing user image-->
                                     
-                                    <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change admin image">
+                                    <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Select image">
                                         <i class="bi bi-pencil-fill fs-7"></i>
                                         <!--begin::Inputs-->
                                         <input type="file" name="admin_image" accept=".png, .jpg, .jpeg" />
@@ -53,7 +53,7 @@
                                     </label>
                                     
                                     <!--begin::Cancel-->
-                                    <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="Cancel user image">
+                                    <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="Cancel image">
                                         <i class="bi bi-x fs-2"></i>
                                     </span>
                                     <!--end::Cancel-->
@@ -67,16 +67,16 @@
                                 
                                 <div class="text-muted fs-7">Set the user image. Only *.png, *.jpg and *.jpeg image files are accepted</div>
                                 
-                            </div>
+                            </div> {% endcomment %}
                             <!--end::Card body-->
-                        </div>
+                        {% comment %} </div> {% endcomment %}
                         <!--end::Logo settings-->
     
     
     
                      
                         <!--begin::Status-->
-                        <div class="card card-flush py-4">
+                        <div class="card card-flush py-4" style="margin-top: 70px;">
                             
                             <div class="card-header">
                                 <!--begin::Card title-->
@@ -118,7 +118,7 @@
                         <ul class="nav nav-custom nav-tabs nav-line-tabs nav-line-tabs-2x border-0 fs-4 fw-bold mb-n2">
                             <!--begin:::Tab item-->
                             <li class="nav-item">
-                                <a class="nav-link text-active-primary pb-4 active" data-bs-toggle="tab" href="#create-or-update-admin-general">Admin</a>
+                                <a class="nav-link text-active-primary pb-4 active" data-bs-toggle="tab" href="#create-or-update-admin-general">General</a>
                             </li>
                             <!--end:::Tab item-->
                       
@@ -137,7 +137,7 @@
                                         
                                         <div class="card-header">
                                             <div class="card-title">
-                                                <h2>Admin</h2>
+                                                <h2>General</h2>
                                             </div>
                                         </div>
                                         
@@ -163,33 +163,32 @@
 
                                                 <div class="fv-row w-100 flex-md-root">
                                                     <div class="mb-5 fv-row">
-                                                        <label class="form-label">Email</label>
-                                                        <input type="text" id="account_holder_email" name="email" value="{{admins.email}}" class="form-control mb-2"  placeholder="Enter your email address" />
-                                                        <div class="error-message" style="color: red;"></div>
+                                                        <label class="required form-label">Email</label>
+                                                        <input type="text" id="account_holder_email" name="email" value="{{admins.email}}" class="form-control mb-2" placeholder="Enter your email address" />
+                                                        <div class="error-message-email" style="color: red;"></div>
                                                     </div>
                                                 </div>
-
                                                 <div class="fv-row w-100 flex-md-root">
                                                     <div class="mb-5 fv-row">
                                                         <label class="required form-label">Mobile</label>
-                                                        <input type="text"inputmode="numeric" oninput="this.value = this.value.replace(/\D+/g, '')" id="contact_number"name="mobile" value="{{admins.phone}}" class="form-control mb-2"  placeholder="Enter your mobile number" />
+                                                        <input type="text" name="mobile" id="contact_number" value="{{admins.phone}}" class="form-control mb-2" placeholder="Enter your mobile number" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1');" maxlength="10"/>
+                                                        <div id="error-message-mobile" style="color: red;"></div>
                                                     </div>
                                                 </div>
                                             </div>
 
                                             
                                             <div class="d-flex mb-10 flex-wrap gap-5 mt-10">
-                                                <div class="fv-row w-100 flex-md-root">                                                
+                                                <div class="fv-row w-100 flex-md-root">
                                                     <div class="mb-5 fv-row">
-                                                    <label class="required form-label">Group</label>
-                                                        <select class="form-select mb-2" name="groups" data-control-select-option="user" data-control="select2"  data-hide-search="false" data-placeholder="Select an option" multiple>
-                                                            <option ></option>
-                                                            {% for group in groups %}
-                                                                <option {% if group.id in active_groups %} selected {% endif %} value="{{group.id}}">{{group.name}}</option>
-                                                            {% endfor %}
-        
-                                                        </select>
-                                                </div>
+                                                        <label class="required form-label">Group</label>
+                                                            <select class="form-select mb-2" name="groups" data-control-select-option="user" data-control="select2"  data-hide-search="false" data-placeholder="Select an option" multiple>
+                                                                <option ></option>
+                                                                {% for group in groups %}
+                                                                    <option {% if group.id in active_groups %} selected {% endif %} value="{{group.id}}">{{group.name}}</option>
+                                                                {% endfor %}        
+                                                            </select>
+                                                    </div>
                                                 </div>
                                                 
                                                 <div class="fv-row w-100 flex-md-root" id="passwordField">
@@ -232,9 +231,16 @@
                             <a href="{% url 'admins:admins.index' %}" id="kt_ecommerce_add_product_cancel" class="btn btn-light me-5">Cancel</a>
                             <!--end::Button-->
                             <!--begin::Button-->
-                            <button type="submit" id="create-or-update-admin-submit" class="btn btn-primary">
+                            {% comment %} <button type="submit" id="create-or-update-admin-submit" class="btn btn-primary">
                                 <span class="indicator-label">Save </span>
-                                <span class="indicator-progress">Please wait... 
+                                <span class="indicator-progress" id="banner-loader-text">Please wait... 
+                                <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                            </button> {% endcomment %}
+                            <button type="submit" id="create-or-update-admin-submit" class="btn btn-primary">
+                                <span class="indicator-label" >Save </span>
+                                </button>
+                                <button type="button" id="banner-loader-text" class="indicator-progress btn btn-primary">
+                                <span class="">Please wait...
                                 <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
                             </button>
                             <!--end::Button-->
@@ -256,91 +262,91 @@
 
 {% block script %}
     <script>
-
         var adminId = document.getElementById('casestudy_id').value;
         var passwordField = document.getElementById('passwordField');
-        
+
         // Check if adminId is not empty or undefined
         if (adminId && adminId !== "undefined") {
             passwordField.style.display = 'none';
         }
 
+        var apiConfig = {
+            "emailValidation": "{% url 'admins:admin.email_exist_check' %}",
+            "mobileValidation": "{% url 'admins:admin.mobile_exist_check' %}"
+        };
 
-        var api_config = {
+        function validateField(fieldName, fieldValue) {
+            // Create the data object to send in the AJAX request
+            var postData = {
+                [fieldName]: fieldValue,
+                instance_id: adminId
+            };
 
-            "validation"   : "{% url 'admins:admin.email_exist_check' %}",
+            // Make the AJAX POST request
+            return $.ajax({
+                type: "POST",
+                url: fieldName === 'email' ? apiConfig.emailValidation : apiConfig.mobileValidation,
+                data: postData,
+            });
         }
-    
 
- $('input[name="email"]').on('keyup', function() {
-    // Get the value from the input field
-    var inputValue = $(this).val();
-    
-    // Check if the email is empty
-    if (inputValue.trim() === '') {
-        // Clear the error message, show the Save button, and enable form submission
-        $('.error-message').text('');
-        $('#create-or-update-admin-submit').show();
-        $('form').off('submit');
-        return;
-    }
-
-    var casestudyId = $('#casestudy_id').val();
-
-    // Create the data object to send in the AJAX request
-    var postData = {
-        email: inputValue, // Change 'url' to 'email' for better clarity
-        instance_id: casestudyId
-    };
-
-    // Cache the Save button element
-    var saveButton = $('#create-or-update-admin-submit');
-
-    // Make the AJAX POST request
-    $.ajax({
-        type: "POST",
-        url: api_config.validation,
-        data: postData,
-        success: function(response) {
-            // Handle the successful response here
-            console.log("AJAX request successful:", response);
-
-            // Check if the response indicates a duplicate email
-            if (response.status_code === 100 && response.message === 'Email Already Exist') {
-                // Display the error message
-                $('.error-message').text('Email Already Exist');
-                // Hide the Save button
-                saveButton.hide();
-                // Disable form submission
-                $('form').on('submit', function(event) {
-                    event.preventDefault();
+        $('input[name="email"]').on('keyup', function () {
+            validateField('email', $(this).val())
+                .done(function (response) {
+                    handleValidationResponse(response, 'Email Already Exist', '.error-message-email');
+                })
+                .fail(function (error) {
+                    console.error("AJAX request error:", error);
                 });
+        });
+
+        $('input[name="mobile"]').on('keyup', function () {
+            validateField('mobile', $(this).val())
+                .done(function (response) {
+                    handleValidationResponse(response, 'Mobile Number Already Exists', '#error-message-mobile');
+                })
+                .fail(function (error) {
+                    console.error("AJAX request error:", error);
+                });
+        });
+
+        function handleValidationResponse(response, errorMessage, errorContainer) {
+            // Handle the response and update the UI accordingly
+            if (response.status_code === 100) {
+                // Display the error message
+                $(errorContainer).text(errorMessage);
+                // Show the Save button
+                $('#create-or-update-admin-submit').prop('disabled', true);
             } else {
                 // Clear the error message, show the Save button, and enable form submission
-                $('.error-message').text('');
-                saveButton.show();
-                $('form').off('submit');
+                $(errorContainer).text('');
+                $('#create-or-update-admin-submit').prop('disabled', false);
             }
-        },
-        error: function(error) {
-            // Handle any errors here
-            console.error("AJAX request error:", error);
-        }
-    });
-});
-
-
-
-
-
-        // Check if err_message input field has a non-empty value
-        var errMessageInput = document.getElementById('err_message');
-        if (errMessageInput && errMessageInput.value.trim() !== '') {
-            // Display a toastr error message for 3 seconds
-            toastr.error(errMessageInput.value, '', { timeOut: 1000 });
         }
     </script>
+    <script>
+        function validateMobileNumber() {
+            var mobileInput = document.getElementById('contact_number');
+            var errorMessageMobile = document.getElementById('error-message-mobile');
 
+            // Remove non-numeric characters
+            var numericValue = mobileInput.value.replace(/\D+/g, '');
+
+            // Check if the numeric value has exactly 10 digits
+            if (numericValue.length === 10) {
+                // Clear error message if valid
+                errorMessageMobile.innerHTML = '';
+            } else {
+                // Display error message if not valid
+                errorMessageMobile.innerHTML = 'Mobile number must be 10 digits.';
+            }
+
+            // Update the input value with the numeric value
+            mobileInput.value = numericValue;
+        }
+
+    
+    </script>
     <script src="{% static 'assets/js/custom/pages/admin/save-admin.js' %}?time={% now 'h:i:s' %}"></script>
 
 

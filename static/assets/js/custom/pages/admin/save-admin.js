@@ -21,10 +21,6 @@ var MCUpdateOrCreateAdmin = function () {
                         validators: {
                             notEmpty: {
                                 message: 'This field is required'
-                            },
-                            regexp: {
-                                regexp: /^[A-Za-z\s]+$/,
-                                message: 'Only characters are allowed'
                             }
                         }
                     },
@@ -44,8 +40,24 @@ var MCUpdateOrCreateAdmin = function () {
                                 message: 'The value is not a valid email address'
                             }
                         }
-                    },
+                    },                   
                     'mobile': {
+                        validators: {
+                            notEmpty: {
+                                message: 'This field is required'
+                            },
+                            numeric: {
+                                message: 'The value is not a number'
+                            },
+                            stringLength: {
+                                min: 10,
+                                max: 10,
+                                message: 'The phone number must be exactly 10 digits'
+                            }
+                        }
+                    },
+
+                    'groups': {
                         validators: {
                             notEmpty: {
                                 message: 'This field is required'
@@ -68,7 +80,12 @@ var MCUpdateOrCreateAdmin = function () {
 
         submitButton.addEventListener('click', e => {
             e.preventDefault();
-
+            const btn = document.getElementById('create-or-update-admin-submit');
+            const text = document.getElementById('banner-loader-text');
+            btn.disabled = true;
+            btn.style.display = 'none';
+            text.style.display = 'block';
+            submitButton.setAttribute('data-kt-indicator', 'on');
             // Validate form before submit
             if (validator) {
                 validator.validate().then(function (status) {
@@ -99,7 +116,7 @@ var MCUpdateOrCreateAdmin = function () {
                         // Enable button
                         submitButton.disabled = false;
                         Swal.fire({
-                            html: "Sorry, looks like there are some errors detected, please try again.",
+                            html: "Please enter the required fields",
                             icon: "error",
                             buttonsStyling: false,
                             confirmButtonText: "Ok, got it!",
