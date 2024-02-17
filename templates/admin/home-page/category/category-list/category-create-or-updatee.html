@@ -53,13 +53,17 @@
                                         
                                         <div class="card-body pt-0 ">
                                             <div class="d-flex mb-10 flex-wrap gap-5 mt-10">
+
                                                 <div class="fv-row w-100 flex-md-root">
                                                     <div class="mb-5 fv-row">
                                                         <label class="required form-label">Category Name</label>
-                                                        <input type="text" name="category_name " value="{{instance.category_name}}" class="form-control mb-2" maxlength='40' placeholder="Enter Category"   />
+                                                        <input type="text" name="category_name" value="{{instance.category_name}}" class="form-control mb-2" maxlength='40' placeholder="Enter Category"   />
                                                     </div>
-                                                </div>                                                                                                                                                                                    
-                                        </div>                                        
+                                                </div>
+                                                
+                                            </div> 
+
+                                        </div>                                                                                                                                                    
                                     </div>
                                 </div>
                             </div>
@@ -99,16 +103,6 @@
         
 
     <script src="{% static 'assets/js/custom/pages/home-page/category/category-update-or-delete.js' %}?time={% now 'h:i:s' %}">
+
     </script>
-    <script>
-        flatpickr("#schedule_time", {
-            enableTime: true,
-            dateFormat: "d-m-Y h:i K",
-            // dateFormat: "Y-m-d H:i:S.uO",
-            time_24hr: false, // Set to false for 12-hour time format
-        });
-    </script>
-
-
-
 {% endblock script %}

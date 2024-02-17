@@ -113,7 +113,7 @@ class CategoryCreateOrUpdateView(View):
         self.context = {"breadcrumbs": [], }
         self.action = "Create"
         self.context['categories_title'] = 'Categories'
-        self.template = 'admin/home-page/category/category-list/category-create-or-update.html'
+        self.template = 'admin/home-page/category/category-list/category-create-or-updatee.html'
 
     def get(self, request, *args, **kwargs):
         id = URLEncryptionDecryption.dec(kwargs.pop('id', None))

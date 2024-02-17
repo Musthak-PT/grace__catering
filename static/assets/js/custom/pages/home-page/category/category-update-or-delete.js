@@ -13,15 +13,18 @@ var MCUpdateOrCreateAdmin = function () {
             form,
             {
                 fields: {
-                    
-                    'category': {
+                    'category_name': {
                         validators: {
                             notEmpty: {
                                 message: 'This field is required'
                             },
-                            
+                            regexp: {
+                                regexp: /^[A-Za-z ]+$/,
+                                message: 'Only characters and spaces are allowed'
+                            }
                         }
-                    },                                                                                
+                    },
+                    
                 },
                 plugins: {
                     trigger: new FormValidation.plugins.Trigger(),

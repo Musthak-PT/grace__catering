@@ -24,7 +24,7 @@ class SendEmails:
             context           = context
             image             = request.build_absolute_uri("/")
             # Social-Logo
-            context['logo']                 = str(image)+'media/logo/solo-logo.png'
+            context['logo']                 = str(image)+'media/logo/grace-logo.png'
             context['x_logo']               = str(image)+'media/mail-logos/social-icons/x.png'
             context['instagram_logo']       = str(image)+'media/mail-logos/social-icons/instagram.png'
             context['facebook_logo']        = str(image)+'media/mail-logos/social-icons/facebook.png'
@@ -46,7 +46,6 @@ class SendEmails:
             connection.close()
             sending_status    = True
         except Exception as es:
-            print("EREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE", es)
             pass
         return sending_status
     
