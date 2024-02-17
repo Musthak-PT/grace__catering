@@ -1,49 +1,178 @@
 [  
+
+
   {
     "model": "auth.Permission",
     "fields": {
-      "codename":"view_enquiry_booking",
-      "name":"view enquiry booking",
+      "codename":"view_roles",
+      "name":"View roles",
       "content_type":4,
-      "label": "Booking"
+      "label": "User Management",
+      "sub_label": "View"
+    }
+  },  
+  {
+    "model": "auth.Permission",
+    "fields": {
+      "codename":"edit_roles",
+      "name":"Edit roles",
+      "content_type":4,
+      "label": "User Management",
+      "sub_label": "Manage"
     }
   },
   {
     "model": "auth.Permission",
     "fields": {
-      "codename":"view_manual_booking",
-      "name":"view manual booking",
+      "codename":"create_roles",
+      "name":"Create roles",
       "content_type":4,
-      "label": "Booking"
+      "label": "User Management",
+      "sub_label": "Manage"
+    }
+  }, 
+  {
+    "model": "auth.Permission",
+    "fields": {
+      "codename":"delete_roles",
+      "name":"Delete roles",
+      "content_type":4,
+      "label": "User Management",
+      "sub_label": "Manage"
+    }
+  },
+
+  {
+    "model": "auth.Permission",
+    "fields": {
+      "codename":"view_admin",
+      "name":"View admin",
+      "content_type":4,
+      "label": "User Management",
+      "sub_label": "View"
+    }
+  },  
+  {
+    "model": "auth.Permission",
+    "fields": {
+      "codename":"edit_admin",
+      "name":"Edit admin",
+      "content_type":4,
+      "label": "User Management",
+      "sub_label": "Manage"
     }
   },
   {
     "model": "auth.Permission",
     "fields": {
-      "codename":"view_booked_customers",
-      "name":"view booked customers",
+      "codename":"create_admin",
+      "name":"Create admin",
       "content_type":4,
-      "label": "Booking"
+      "label": "User Management",
+      "sub_label": "Manage"
+    }
+  }, 
+  {
+    "model": "auth.Permission",
+    "fields": {
+      "codename":"delete_admin",
+      "name":"Delete admin",
+      "content_type":4,
+      "label": "User Management",
+      "sub_label": "Manage"
+    }
+  },
+
+  {
+    "model": "auth.Permission",
+    "fields": {
+      "codename":"view_groups",
+      "name":"View groups",
+      "content_type":4,
+      "label": "User Management",
+      "sub_label": "View"
+    }
+  },  
+  {
+    "model": "auth.Permission",
+    "fields": {
+      "codename":"edit_groups",
+      "name":"Edit groups",
+      "content_type":4,
+      "label": "User Management",
+      "sub_label": "Manage"
     }
   },
   {
     "model": "auth.Permission",
     "fields": {
-      "codename":"view_contact_us",
-      "name":"view contact us",
+      "codename":"create_groups",
+      "name":"Create groups",
       "content_type":4,
-      "label": "Enquiry"
+      "label": "User Management",
+      "sub_label": "Manage"
+    }
+  }, 
+  {
+    "model": "auth.Permission",
+    "fields": {
+      "codename":"delete_groups",
+      "name":"Delete groups",
+      "content_type":4,
+      "label": "User Management",
+      "sub_label": "Manage"
     }
   },
   {
     "model": "auth.Permission",
     "fields": {
-      "codename":"view_be_partner",
-      "name":"view be a partner",
+      "codename":"view_dashboard",
+      "name":"View dashboard",
       "content_type":4,
-      "label": "Enquiry"
+      "label": "Dashboard",
+      "sub_label": "View"
     }
   },
+
+
+  {
+    "model": "auth.Permission",
+    "fields": {
+      "codename":"view_category",
+      "name":"view Category",
+      "content_type":4,
+      "label": "Category"
+    }
+  },
+  {
+    "model": "auth.Permission",
+    "fields": {
+      "codename":"delete_category",
+      "name":"Delete category",
+      "content_type":4,
+      "label": "Category"
+    }
+  },
+  {
+    "model": "auth.Permission",
+    "fields": {
+      "codename":"edit_category",
+      "name":"Edit Category",
+      "content_type":4,
+      "label": "Category"
+    }
+  },
+  {
+    "model": "auth.Permission",
+    "fields": {
+      "codename":"create_category",
+      "name":"Create Category",
+      "content_type":4,
+      "label": "Category"
+    }
+  }, 
+
+  
   {
     "model": "auth.Permission",
     "fields": {
@@ -62,96 +191,7 @@
       "label": "Promotion"
     }
   },
-  {
-    "model": "auth.Permission",
-    "fields": {
-      "codename":"view_banner_image",
-      "name":"view banner image",
-      "content_type":4,
-      "label": "Banner Image"
-    }
-  },
-  {
-    "model": "auth.Permission",
-    "fields": {
-      "codename":"view_ad_management",
-      "name":"view ad management",
-      "content_type":4,
-      "label": "Ad Management"
-    }
-  },
-  {
-    "model": "auth.Permission",
-    "fields": {
-      "codename":"view_accommodation_type",
-      "name":"view accommodation type",
-      "content_type":4,
-      "label": "Property Management"
-    }
-  },
-  {
-    "model": "auth.Permission",
-    "fields": {
-      "codename":"view_property_collection",
-      "name":"view property collection",
-      "content_type":4,
-      "label": "Property Management"
-    }
-  },
-  {
-    "model": "auth.Permission",
-    "fields": {
-      "codename":"view_property_facility",
-      "name":"view property facility",
-      "content_type":4,
-      "label": "Property Management"
-    }
-  },
-  {
-    "model": "auth.Permission",
-    "fields": {
-      "codename":"view_room_type",
-      "name":"view room type",
-      "content_type":4,
-      "label": "Property Management"
-    }
-  },
-  {
-    "model": "auth.Permission",
-    "fields": {
-      "codename":"view_property",
-      "name":"view property",
-      "content_type":4,
-      "label": "Property Management"
-    }
-  },
-  {
-    "model": "auth.Permission",
-    "fields": {
-      "codename":"view_offer_management",
-      "name":"view offer management",
-      "content_type":4,
-      "label": "Offer Management"
-    }
-  },
-  {
-    "model": "auth.Permission",
-    "fields": {
-      "codename":"view_testimonial",
-      "name":"view testimonial",
-      "content_type":4,
-      "label": "Testimonial"
-    }
-  },
-  {
-    "model": "auth.Permission",
-    "fields": {
-      "codename":"view_wishlist",
-      "name":"view wishlist",
-      "content_type":4,
-      "label": "Wishlist"
-    }
-  },
+
   {
     "model": "auth.Permission",
     "fields": {
@@ -161,15 +201,7 @@
       "label": "Subscription"
     }
   },
-  {
-    "model": "auth.Permission",
-    "fields": {
-      "codename":"view_review",
-      "name":"view review ",
-      "content_type":4,
-      "label": "Review"
-    }
-  },
+
   {
     "model": "auth.Permission",
     "fields": {

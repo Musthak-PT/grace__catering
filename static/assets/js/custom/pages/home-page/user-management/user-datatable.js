@@ -31,8 +31,10 @@ var DatatablesServerSide = function() {
             },
             columns: [
                 { data: 'id' },
-                { data: 'product_name',orderable: false },
-                { data: 'category_name',orderable: false },
+                { data: 'first_name',orderable: false },
+                { data: 'last_name',orderable: false },
+                { data: 'email', orderable: false  },
+                { data: 'phone', orderable: false  },
                 { data: 'is_active' },
                 { data: 'id' }
             ],
@@ -51,7 +53,7 @@ var DatatablesServerSide = function() {
                 {
                     searchable: false,
                     orderable: false,
-                    targets: 3,
+                    targets: 5,
                     render: function(data, type, row) {
                         let label_badge_change = '';
                         if(data == 'True'){
@@ -69,9 +71,9 @@ var DatatablesServerSide = function() {
                     className: 'text-end',
                     render: function (data, type, row) {
                         let edit_url = api_config.edit_url.replace('0', row.encrypt_id.toString());
-                        var categoryDeleteValue = document.getElementById('categoryDelete').value;
-                        var categoryEditValue = document.getElementById('categoryEdit').value;
-                        if (categoryDeleteValue === 'True' && categoryEditValue === 'True') {
+                        var UserDeleteValue = document.getElementById('userDelete').value;
+                        var UserEditdValue = document.getElementById('userEdit').value;
+                        if (UserDeleteValue === 'True' && UserEditdValue === 'True') {
                             // Include both edit and delete buttons
                             return `
                                 <div class="d-flex justify-content-end flex-shrink-0">
@@ -94,7 +96,7 @@ var DatatablesServerSide = function() {
                                     </a>
                                 </div>
                             `;
-                        } else if (categoryDeleteValue === 'True') {
+                        } else if (UserDeleteValue === 'True') {
                             // Include only delete button
                             return `
                                 <div class="d-flex justify-content-end flex-shrink-0">
@@ -109,7 +111,7 @@ var DatatablesServerSide = function() {
                             </a>
                                 </div>
                             `;
-                        } else if (categoryEditValue === 'True') {
+                        } else if (UserEditdValue === 'True') {
                             // Include only edit button
                             return `
                                 <div class="d-flex justify-content-end flex-shrink-0">

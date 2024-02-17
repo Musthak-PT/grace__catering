@@ -4,7 +4,6 @@ from django.urls import reverse
 from django_datatables_view.base_datatable_view import BaseDatatableView
 from django.db.models import Q
 from django.utils.html import escape
-from apps.bannerimage.models import BannerImages, BannerImagesDetail, banner_temporary_image_upload_image_dir
 from solo_core.helpers.signer import URLEncryptionDecryption
 from django.contrib import messages
 from django.http import JsonResponse

@@ -21,6 +21,10 @@ var MCUpdateOrCreateAdmin = function () {
                         validators: {
                             notEmpty: {
                                 message: 'This field is required'
+                            },
+                            regexp: {
+                                regexp: /^[A-Za-z\s]+$/,
+                                message: 'Only characters are allowed'
                             }
                         }
                     },
@@ -40,24 +44,8 @@ var MCUpdateOrCreateAdmin = function () {
                                 message: 'The value is not a valid email address'
                             }
                         }
-                    },                   
-                    'mobile': {
-                        validators: {
-                            notEmpty: {
-                                message: 'This field is required'
-                            },
-                            numeric: {
-                                message: 'The value is not a number'
-                            },
-                            stringLength: {
-                                min: 10,
-                                max: 10,
-                                message: 'The phone number must be exactly 10 digits'
-                            }
-                        }
                     },
-
-                    'groups': {
+                    'mobile': {
                         validators: {
                             notEmpty: {
                                 message: 'This field is required'
@@ -111,7 +99,7 @@ var MCUpdateOrCreateAdmin = function () {
                         // Enable button
                         submitButton.disabled = false;
                         Swal.fire({
-                            html: "Please enter the required fields",
+                            html: "Sorry, looks like there are some errors detected, please try again.",
                             icon: "error",
                             buttonsStyling: false,
                             confirmButtonText: "Ok, got it!",

@@ -48,12 +48,12 @@
                         
 
 
-                        <div class="fv-row w-100 flex-md-root">
+                        <!-- <div class="fv-row w-100 flex-md-root">
                             <div class="mb-5 fv-row">
                                 <label for="" class="form-label required">Date Range</label>
                                 <input type="text" name="datefilter" data-users-filter="date_range" class="form-control form-control" value="" placeholder="Pick the date range" />
                             </div>
-                        </div>
+                        </div> -->
 
                         
 
@@ -65,7 +65,7 @@
                         {% endwith %}
                         <!--begin::Add product-->
                         {% if request.user|check_permission:'auth.create_users' %}
-                        <a href="{% url 'account:user.create' %}" class="btn btn-primary">Create</a>
+                        <a href="{% url 'user_management:user.create' %}" class="btn btn-primary">Create</a>
                         {%endif%}
 
                         <!--end::Add product-->
@@ -97,7 +97,8 @@
                                     <th class="min-w-155px">First Name</th>
                                     <th class="min-w-155px">Last Name</th>
                                     <th class="min-w-155px">Email</th>
-                                    <th class="min-w-155px">Joined Date</th>
+                                    <th class="min-w-155px">Mobile Number</th>
+                                    <!-- <th class="min-w-155px">Joined Date</th> -->
                                     <th class="min-w-155px">Status</th>
                                     <th class="text-end min-w-100px">Actions</th>                                    
                                 </tr>
@@ -129,11 +130,11 @@
 {% block script %}
 <script>
     var api_config = {
-        'datatable': "{% url 'account:load.user.datatable'%}",
+        'datatable': "{% url 'user_management:load.user.datatable'%}",
         'csrfmiddlewaretoken': '{{ csrf_token }}',
-        'active_inactive_company': "{% url 'account:active.or.inactive.user' %}",
-        'edit_url': "{% url 'account:user.update' '0' %}",
-        'delete_records': "{% url 'account:user.records.destroy' %}",
+        'active_inactive_company': "{% url 'user_management:user.status_change' %}",
+        'edit_url': "{% url 'user_management:user.update' '0' %}",
+        'delete_records': "{% url 'user_management:user.records.destroy'%}",
     };
         
 </script>

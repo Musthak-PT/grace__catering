@@ -1,19 +1,22 @@
 "use strict";
 
 // Class definition
-var DatatablesServerSide = function() {
+var DatatablesAndCRUDOperationServerSide = function() {
+
+
+    // start datatable and deleteation section
+
     // Shared variables
     var table;
     var dt;
 
     // Private functions
     var initDatatable = function() {
-
-        dt = $("#accomodation-type-datatable").DataTable({
+        
+        dt = $("#roles-datatable").DataTable({
             searchDelay: 500,
             serverSide: true,
             responsive: true,
-            pageLength: 25,
             processing: true,
             order: [
                 [0, 'desc']
@@ -31,21 +34,11 @@ var DatatablesServerSide = function() {
                 },
             },
             columns: [
-                {data   : 'id'},
-                {
-                    data: null,
-                    orderable: false,
-                    searchable: false,
-                    render: function (data, type, row, meta) {
-                        // Calculate the correct serial number across pages
-                        return meta.row + 1 + meta.settings._iDisplayStart;
-                    }
-                }, 
-                {data   : 'name',orderable: false},
-                {data   : 'permissions',orderable: false},
-                {data   : 'id'},
+                {data: 'id'},
+                {data: 'name'},
+                {data: 'permissions'},
+                {data: 'id'}, 
             ],
-
             columnDefs: [
                 {
                     targets: 0,
@@ -57,57 +50,7 @@ var DatatablesServerSide = function() {
                             </div>`;
                     }
                 },
-                {
-                    targets: 1,
-                    orderable: false,
-                    render: function (data, type, row, meta) {
-                        return meta.row + 1; // Set the serial number as the row index + 1
-                    }
-                },
-                {
-                    searchable: true,
-                    targets: 2,
-                    render: function(data, type, row) {
-                        let edit_url = api_config.edit_url.replace('0', row.encrypt_id.toString());
-                        return `<div class="d-flex align-items-center">
-                                    <a href="${edit_url}" class="symbol symbol-50px"style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 200px;display: inline-block;" >
-                                    </a>
-                                    <div>
-                                        <a href="${edit_url}" class="text-gray-800 text-hover-primary fs-5 fw-bolder gift-title" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 200px;display: inline-block;">${data}</a>
-                                    </div>
-                                </div>`;
-                    }
-                },
-                // {
-                //     searchable: true,
-                //     orderable: true,
-                //     targets: 2,
-                //     render: function(data, type, row) {
-                //         let edit_url = api_config.edit_url.replace('0', row.encrypt_id.toString());
-                //         return `<div class="d-flex align-items-center">
-                //                     <a href="${edit_url}" class="symbol symbol-50px"style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 200px;display: inline-block;" >
-                //                     </a>
-                //                     <div>
-                //                         <a href="${edit_url}" class="text-gray-800 text-hover-primary fs-5 fw-bolder gift-title" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 200px;display: inline-block;">${data}</a>
-                //                     </div>
-                //                 </div>`;
-                //     }
-                // },
-                
-                // {
-                //     searchable: false,
-                //     orderable: false,
-                //     targets: 2,
-                //     render: function(data, type, row) {
-                //         let label_badge_change = '';
-                //         if(data == 'True'){
-                //             label_badge_change = `<span style="cursor:pointer" data-id=${row.id}  class="btn btn-sm btn-outline btn-outline-dashed btn-outline-success btn-active-light-success active_inactive_language">Active</span>`;
-                //         }else if(data == 'False'){
-                //             label_badge_change =  `<span style="cursor:pointer" data-id=${row.id}  class="btn btn-sm btn-outline btn-outline-dashed btn-outline-danger btn-active-light-danger active_inactive_language">Inactive</span>`;
-                //         }
-                //         return label_badge_change;
-                //     }
-                // },
+
                 {
                     targets: -1,
                     data: null,
@@ -153,7 +96,15 @@ var DatatablesServerSide = function() {
                     },
                 },
             ],
-            // Add data-filter attribute
+                    // Add data-filter attribute
+                    
+            drawCallback: function(settings) {},
+            fnRowCallback: function (nRow, aData, iDisplayIndex) {
+                var info = $(this).DataTable().page.info();
+                $("td:nth-child(1)", nRow).html(info.start + iDisplayIndex + 1);
+                return nRow;
+            },
+        
             drawCallback: function(settings) {},
             createdRow: function(row, data, dataIndex) {
                 $(row).find('td:eq(4)').attr('data-filter', data.CreditCardType);
@@ -161,89 +112,29 @@ var DatatablesServerSide = function() {
         });
 
         table = dt.$;
+        
         // Re-init functions on every table re-draw -- more info: https://datatables.net/reference/event/draw
         dt.on('draw', function() {
+            
+            
             initToggleToolbar();
             toggleToolbars();
-            handleDeleteRows();
-            handleStatusFilter();
-            ActiveOrIncativeUser();
+            handleDeleteRows(); 
             KTMenu.createInstances();
         });
     }
 
-    // // Search Datatable --- official docs reference: https://datatables.net/reference/api/search()
+    // Search Datatable --- official docs reference: https://datatables.net/reference/api/search()
     var handleSearchDatatable = function() {
-        const filterSearch = document.querySelector('[data-users-table-filter="search"]');
+        const filterSearch = document.querySelector('[data-roles-table-filter="search"]');
         filterSearch.addEventListener('keyup', function(e) {
             dt.search(e.target.value).draw();
         });
     }
 
-    // // Handle status filter dropdown
-    var handleStatusFilter = () => {
-        const filterStatus = document.querySelector('[data-users-filter="status"]');
-        $(filterStatus).on('change', e => {
-            let value = e.target.value;
-            if(value === 'all'){
-                value = '';
-            }
-            dt.column(3).search(value).draw();
-        });
-    }
+    
 
-    
-    var ActiveOrIncativeUser = ()=>{
-        const activeButton = document.getElementsByClassName('active_inactive_language')
-        activeButton.forEach(d => {
-            d.addEventListener('click', function(e) {
-                const activeId = $(this).data('id');
-                e.preventDefault();
-                Swal.fire({
-                    text: "Are you sure you want to change status",
-                    icon: "warning",
-                    showCancelButton: true,
-                    buttonsStyling: true,
-                    confirmButtonText: "Yes",
-                    cancelButtonText: "No, return",
-                    customClass: {
-                        confirmButton: "btn btn-primary",
-                        cancelButton: "btn btn-active-light"
-                    }
-                }).then(function(result){
-                    if(result.value){               
-                        $.post(`${api_config.active_inactive_company}`, {id:activeId }, function(data, status, xhr) {
-                            if (data.status_code == 200) {
-                                Swal.fire({
-                                    text: "Successfully changed status ",
-                                    icon: "success",
-                                    buttonsStyling: false,
-                                    confirmButtonText: "Ok, got it!",
-                                    customClass: {
-                                        confirmButton: "btn btn-primary"
-                                    }
-                                }).then(function() {
-                                    dt.draw();
-                                });
-    
-                            } else {
-                                Swal.fire({
-                                    text: "Something went wrong.",
-                                    icon: "error",
-                                    buttonsStyling: false,
-                                    confirmButtonText: "Ok, got it!",
-                                    customClass: {
-                                        confirmButton: "btn fw-bold btn-primary",
-                                    }
-                                });
-                            }
-                        })
-                    }
-                })
-            });
-        });
-    }
-    // Delete customer
+
     var handleDeleteRows = () => {
         // Select all delete buttons
         const deleteButtons = document.querySelectorAll('[data-roles-table-filter="delete_row"]');
@@ -256,9 +147,8 @@ var DatatablesServerSide = function() {
                 e.preventDefault();
                 // Select parent row
                 const parent = e.target.closest('tr');
-                // Get customer name
                 const userName = parent.querySelectorAll('td')[1].innerText;
-
+                // Get customer name
                 //     // SweetAlert2 pop up --- official docs reference: https://sweetalert2.github.io/
                 Swal.fire({
                     text: "Are you sure you want to delete " + userName + "?",
@@ -269,15 +159,14 @@ var DatatablesServerSide = function() {
                     cancelButtonText: "No, cancel",
                     customClass: {
                         confirmButton: "btn fw-bold btn-danger",
-                        cancelButton: "btn fw-bold btn-active-light-primary"
+                        cancelButton: "btn fw-bold btn-success"
                     }
                 }).then(function(result) {
                     if (result.value) {
                         $.post(`${api_config.delete_records}`, { ids: destroyRecordIds }, function(data, status, xhr) {
-
                             if (data.status_code == 200) {
                                 Swal.fire({
-                                    text: "Success",
+                                    text: "You have deleted !.",
                                     icon: "success",
                                     buttonsStyling: false,
                                     confirmButtonText: "Ok, got it!",
@@ -316,33 +205,22 @@ var DatatablesServerSide = function() {
                             });
                         });
 
-                    } else if (result.dismiss === 'cancel') {
-                        Swal.fire({
-                            text: userName + " was not deleted.",
-                            icon: "error",
-                            buttonsStyling: false,
-                            confirmButtonText: "Ok, got it!",
-                            customClass: {
-                                confirmButton: "btn fw-bold btn-primary",
-                            }
-                        });
-                    }
+                    } 
                 });
             })
         });
     }
 
 
-
-    // Init toggle toolbar
+    // // Init toggle toolbar
     var initToggleToolbar = function() {
         // Toggle selected action toolbar
         // Select all checkboxes
-        const container = document.querySelector('#accomodation-type-datatable');
+        const container = document.querySelector('#roles-datatable');
         const checkboxes = container.querySelectorAll('[type="checkbox"]');
 
-        // Select elements
-        const deleteSelected = document.querySelector('[data-users-table-select="delete_selected"]');
+        // // Select elements
+        // const deleteSelected = document.querySelector('[data-roles-table-select="delete_selected"]');
 
         // Toggle delete selected toolbar
         checkboxes.forEach(c => {
@@ -355,148 +233,210 @@ var DatatablesServerSide = function() {
         });
 
         // Deleted selected rows
-        deleteSelected.addEventListener('click', function() {
+        // deleteSelected.addEventListener('click', function() {
 
-            const row_ids = []
-            $(".checkbox-input-id:checkbox:checked").each(function() {
-                row_ids.push($(this).val());
-            });
+        //     const row_ids = []
+        //     $(".checkbox-input-id:checkbox:checked").each(function() {
+        //         row_ids.push($(this).val());
+        //     });
 
-            Swal.fire({
-                text: "Are you sure you want to delete selected ?",
-                icon: "warning",
-                showCancelButton: true,
-                buttonsStyling: false,
-                showLoaderOnConfirm: true,
-                confirmButtonText: "Yes, delete!",
-                cancelButtonText: "No, cancel",
-                customClass: {
-                    confirmButton: "btn fw-bold btn-danger",
-                    cancelButton: "btn fw-bold btn-active-light-primary"
-                },
-            }).then(function(result) {
-                if (result.value) {
+        //     Swal.fire({
+        //         text: "Are you sure you want to delete selected records?",
+        //         icon: "warning",
+        //         showCancelButton: true,
+        //         buttonsStyling: false,
+        //         showLoaderOnConfirm: true,
+        //         confirmButtonText: "Yes, delete!",
+        //         cancelButtonText: "No, cancel",
+        //         customClass: {
+        //             confirmButton: "btn fw-bold btn-danger",
+        //             cancelButton: "btn fw-bold btn-active-light-primary"
+        //         },
+        //     }).then(function(result) {
+        //         if (result.value) {
 
-                    $.post(`${api_config.delete_records}`, { ids: row_ids }, function(data, status, xhr) {
+        //             $.post(`${api_config.delete_records}`, { ids: row_ids }, function(data, status, xhr) {
 
-                        if (data.status = 200) {
-                            Swal.fire({
-                                text: "You have deleted all selected ",
-                                icon: "success",
-                                buttonsStyling: false,
-                                confirmButtonText: "Ok, got it!",
-                                customClass: {
-                                    confirmButton: "btn fw-bold btn-primary",
-                                }
-                            }).then(function() {
-                                // delete row data from server and re-draw datatable
-                                dt.draw();
-                                const headerCheckbox = container.querySelectorAll('[type="checkbox"]')[0];
-                                headerCheckbox.checked = false;
-                            });
+        //                 if (data.status = 200) {
+        //                     Swal.fire({
+        //                         text: "You have deleted SuccessFully records!.",
+        //                         icon: "success",
+        //                         buttonsStyling: false,
+        //                         confirmButtonText: "Ok, got it!",
+        //                         customClass: {
+        //                             confirmButton: "btn fw-bold btn-primary",
+        //                         }
+        //                     }).then(function() {
+        //                         // delete row data from server and re-draw datatable
+        //                         dt.draw();
+        //                         const headerCheckbox = container.querySelectorAll('[type="checkbox"]')[0];
+        //                         headerCheckbox.checked = false;
+        //                     });
 
-                        } else {
-                            Swal.fire({
-                                text: "Something went wrong.",
-                                icon: "error",
-                                buttonsStyling: false,
-                                confirmButtonText: "Ok, got it!",
-                                customClass: {
-                                    confirmButton: "btn fw-bold btn-primary",
-                                }
-                            });
-                        }
+        //                 } else {
+        //                     Swal.fire({
+        //                         text: "Something went wrong.",
+        //                         icon: "error",
+        //                         buttonsStyling: false,
+        //                         confirmButtonText: "Ok, got it!",
+        //                         customClass: {
+        //                             confirmButton: "btn fw-bold btn-primary",
+        //                         }
+        //                     });
+        //                 }
 
-                    }, 'json').done(function() {
-                        console.log('Request done!');
-                    }).fail(function(jqxhr, settings, ex) {
-                        console.log('failed, ' + ex);
-                        Swal.fire({
-                            text: "Something went wrong.",
-                            icon: "error",
-                            buttonsStyling: false,
-                            confirmButtonText: "Ok, got it!",
-                            customClass: {
-                                confirmButton: "btn fw-bold btn-primary",
-                            }
-                        });
-                    });
+        //             }, 'json').done(function() {
+        //                 console.log('Request done!');
+        //             }).fail(function(jqxhr, settings, ex) {
+        //                 console.log('failed, ' + ex);
+        //                 Swal.fire({
+        //                     text: "Something went wrong.",
+        //                     icon: "error",
+        //                     buttonsStyling: false,
+        //                     confirmButtonText: "Ok, got it!",
+        //                     customClass: {
+        //                         confirmButton: "btn fw-bold btn-primary",
+        //                     }
+        //                 });
+        //             });
 
-                } else if (result.dismiss === 'cancel') {
-                    Swal.fire({
-                        text: "Selected user was not deleted.",
-                        icon: "error",
-                        buttonsStyling: false,
-                        confirmButtonText: "Ok, got it!",
-                        customClass: {
-                            confirmButton: "btn fw-bold btn-primary",
-                        }
-                    });
-                }
-            });
-        });
+        //         } else if (result.dismiss === 'cancel') {
+        //             Swal.fire({
+        //                 text: "Selected category was not deleted.",
+        //                 icon: "error",
+        //                 buttonsStyling: false,
+        //                 confirmButtonText: "Ok, got it!",
+        //                 customClass: {
+        //                     confirmButton: "btn fw-bold btn-primary",
+        //                 }
+        //             });
+        //         }
+        //     });
+        // });
     }
 
+    // Toggle toolbars
     var toggleToolbars = function() {
         // Define variables
-        const container = document.querySelector('#accomodation-type-datatable');
+        const container = document.querySelector('#roles-datatable');
         const toolbarBase = document.querySelector('[data-table-toolbar="base"]');
-        const toolbarSelected = document.querySelector('[data-users-table-toolbar="selected"]');
-        const selectedCount = document.querySelector('[data-users-table-select="selected_count"]');
+        const toolbarSelected = document.querySelector('[data-roles-table-toolbar="selected"]');
+        const selectedCount = document.querySelector('[ data-roles-table-select="selected_count"]');
+
         // Select refreshed checkbox DOM elements
         const allCheckboxes = container.querySelectorAll('tbody [type="checkbox"]');
-        const headerCheckbox = container.querySelectorAll('[type="checkbox"]')[0];
-      
+
         // Detect checkboxes state & count
         let checkedState = false;
         let count = 0;
-      
+
         // Count checked boxes
         allCheckboxes.forEach(c => {
-          if (c.checked) {
-            checkedState = true;
-            count++;
-          }
+            if (c.checked) {
+                checkedState = true;
+                count++;
+            }
         });
-      
-        // Toggle toolbars
-        if (checkedState) {
-            selectedCount.innerHTML = count;
-          toolbarBase.classList.add('d-none');
-          toolbarSelected.classList.remove('d-none');
-        } else {
-          toolbarBase.classList.remove('d-none');
-          toolbarSelected.classList.add('d-none');
-        }
-      
-        // Check/uncheck checkboxes based on "select all" checkbox state
-        headerCheckbox.addEventListener('click', function() {
-          allCheckboxes.forEach(c => {
-            c.checked = headerCheckbox.checked;
-          });
-          checkedState = headerCheckbox.checked;
-          count = headerCheckbox.checked ? allCheckboxes.length : 0;
-          selectedCount.innerHTML = count;
-          if (checkedState) {
-            toolbarBase.classList.add('d-none');
-            toolbarSelected.classList.remove('d-none');
-          } else {
-            toolbarBase.classList.remove('d-none');
-            toolbarSelected.classList.add('d-none');
-          }
-        });
-                // Uncheck header checkbox if not all checkboxes are checked
-                if (checkedState && count !== allCheckboxes.length) {
-                    headerCheckbox.checked = false;
-                  } else if (count === 0) { // added new condition
-                    headerCheckbox.checked = false;
-                  }
-                  else if (checkedState && count == allCheckboxes.length) {
-                      headerCheckbox.checked = true;
-                  }
-          
-      };
-      
+
+        
+    }
+
+    
+
+    // end datatable and deleteation section
+
+
+
+
+   
+
+
+
+
+
+
+    // var handleBannerImageCRUDOperations = () => {
+
+    //     let BannerImageDropzone = new Dropzone("#banner_images_dropzone", {
+    //         url: `${api_config.upload_banner_images}`,
+    //         acceptedFiles: ".jpeg,.jpg,.png",
+    //         maxFiles: 10,
+    //         paramName: "file",
+    //         maxFilesize: 10, // MB
+    //         addRemoveLinks: true,
+    //         accept: function(file, done) {
+    //             done();
+    //         },
+    //         init: function() {
+
+    //             this.on("maxfilesexceeded", function (data) {
+    //                 let res = eval('(' + data.xhr.responseText + ')');
+    //             });
+    //             this.on("error", function (file, message) {
+    //                 //this.removeFile(file);
+    //             });
+    //             this.on("sending", function(file, xhr, formData){
+    //                 formData.append("csrfmiddlewaretoken", `${api_config.csrfmiddlewaretoken}`);
+    //             });
+    //             this.on("success", function(file, responseText) {
+    //                 if(responseText.status_code == 200)
+    //                 {
+    //                     dt.draw();
+    //                     let childElements = file?.previewElement?.children;
+    //                     childElements.forEach(childElement => {
+    //                         childElement.setAttribute('instance_id', responseText.data);
+    //                     });
+    //                 }
+    //             });
+    //             this.on('removedfile', function(file) {
+    //                 let removeElement = file.previewElement.getElementsByTagName('a')?.[0];
+    //                 let instance_id = removeElement.getAttribute('instance_id')
+    //                 console.log(file)
+    //                 // $.post(`${api_config.delete_records}`, { ids: [instance_id] }, 
+    //                 //     function(data, status, xhr) {
+    //                 //         if(data.status_code == 200)
+    //                 //         {
+    //                 //             dt.draw();
+    //                 //         }
+
+    //                 // }).done(function() { console.log('Request done!'); })
+    //                 // .fail(function(jqxhr, settings, ex) { console.log('failed, ' + ex); });
+
+    //             }); 
+    //         }
+    //     });
+
+
+
+        
+    // }
+
+
+
+
+
+
+
+    
+
+
+
+
+
+    
+
+
+    
+
+
+    // end banner images crud operation
+
+
+
+
+
+    
+
 
 
     // Public methods
@@ -506,16 +446,28 @@ var DatatablesServerSide = function() {
             handleSearchDatatable();
             initToggleToolbar();
             handleDeleteRows();
-            ActiveOrIncativeUser();
-            handleStatusFilter();
-    
-            // Example: Apply sorting to the second column after initialization
-            dt.order([1, 'asc']).draw();
+
+
+
+
+
         }
     }
+
 }();
 
 // On document ready
 KTUtil.onDOMContentLoaded(function() {
-    DatatablesServerSide.init();
+    DatatablesAndCRUDOperationServerSide.init();
 });
+
+
+
+function keyispressed(evt){
+    var ASCIICode = (evt.which) ? evt.which : evt.keyCode
+    console.log(ASCIICode)
+    if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57) && (ASCIICode < 97 || ASCIICode > 105) &&  ASCIICode != 116)
+        return false;
+    return true;
+}
+

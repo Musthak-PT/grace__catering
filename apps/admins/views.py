@@ -41,18 +41,18 @@ class AdminsView(View):
 class LoadAdminsDatatable(BaseDatatableView):
     model = Users
     
-    order_columns = ['id','email''image','full_name','is_active']
+    order_columns = ['id']
     
     def get_initial_queryset(self):
-
+        
         filter_value = self.request.POST.get('columns[3][search][value]', None)
         
         if filter_value == '1':
-            return self.model.objects.filter(is_active=1).exclude(is_admin=0)
+            return self.model.objects.filter(is_active=True, is_admin=True).exclude(is_superuser=True)
         elif filter_value == '2':
-            return self.model.objects.filter(is_active=0).exclude(is_admin=0)
+            return self.model.objects.filter(is_active=False, is_admin=True).exclude(is_superuser=True)
         else:
-            return self.model.objects.all().exclude(is_admin=0)
+            return self.model.objects.filter(is_admin=True).exclude(is_superuser=True)
 
 
     def filter_queryset(self, qs):
@@ -81,19 +81,15 @@ class LoadAdminsDatatable(BaseDatatableView):
 
     def prepare_results(self, qs):
         json_data = []
-        for item in qs:
+        for item in qs:          
             json_data.append({
                 'id'            : escape(item.id),
-                'full_name'     : escape(item.full_name),
-                'email'         : escape(item.email),
-                'phone'         : escape(item.phone),
-                'is_active'     : escape(item.is_active),
-                'image'         : escape(item.image.url),
-                'created_date'  : item.date_joined.strftime("%Y-%m-%d %H:%M:%S"),
                 'encrypt_id'    : escape(URLEncryptionDecryption.enc(item.id)),
-                'super_user'    : escape(item.is_superuser)
-           
-
+                'email'         : escape(item.email),
+                'image'         : escape(item.image.url),
+                'full_name'     : escape(item.full_name),
+                'is_active'     : escape(item.is_active),
+                'created_date'  : item.date_joined.strftime("%Y-%m-%d %H:%M:%S"),
             })
         return json_data
     
@@ -125,8 +121,8 @@ class AdminCreateOrUpdateView(View):
         self.context['title'] = 'Admin'
         self.action = "Create "
         self.template = 'admin/user/admins/create-or-update.html'
-
-
+        
+        
     def get(self, request, *args, **kwargs):
         id = URLEncryptionDecryption.dec(kwargs.pop('id', None))
         
@@ -142,6 +138,7 @@ class AdminCreateOrUpdateView(View):
         self.context['groups'] = Group.objects.all()
         self.generateBreadcrumbs()         
         return render(request, self.template , context=self.context)
+    
 
     def generateBreadcrumbs(self):
         self.context['breadcrumbs'].append({"name": "Home", "route": reverse('home:dashboard'), 'active': False})
@@ -154,6 +151,7 @@ class AdminCreateOrUpdateView(View):
         
         admin_id = request.POST.get('admin_id', None)
         try:
+            
             groups = request.POST.getlist('groups')
             
             remove_groups = []
@@ -167,8 +165,10 @@ class AdminCreateOrUpdateView(View):
                 [groups.remove(str(item)) for item in active_groups if str(item) in groups]
                 
             else:
-                admin = Users()
-            
+                # admin = User()
+                admin = Users(user_type=2)
+                self.action = 'Created'
+
             if request.FILES.__len__() != 0:
                 if request.POST.get('admin_image', None) is None:
                     admin.image = request.FILES.get('admin_image')
@@ -177,28 +177,30 @@ class AdminCreateOrUpdateView(View):
             admin.full_name = request.POST.get('full_name', None)            
             admin.email     = request.POST.get('email', None)
             admin.phone    = request.POST.get('mobile', None)            
-            admin.user_type = '1'
+            
             if len(request.POST.get('password')) != 0:
                 admin.password = make_password(request.POST.get('password'))
             admin.is_admin  = True
             admin.save()
-            current_password = request.POST.get('password')
-            email  = request.POST.get('email', None)
+            
             for group in groups:
                 group_instance = get_object_or_none(Group,id=group)
                 if group_instance is not None:
                     group_instance.custom_group_set.add(admin)
+
             for remove_group in remove_groups:
                 remove_group_instance = get_object_or_none(Group,id=remove_group)
                 if remove_group_instance is not None:
                     remove_group_instance.custom_group_set.remove(admin)
-            admin_register_completion_mail(request, admin, current_password, email)
+
             messages.success(request, f"Data Successfully "+ self.action)
+
         except Exception as e:
             messages.error(request, f"Something went wrong."+str(e))
             if admin_id is not None and admin_id != '':
                 return redirect('admins:admins.update', id = URLEncryptionDecryption.dec(int(admin_id)) )   
             return redirect('admins:admins.create')
+
         return redirect('admins:admins.index')
 
 
@@ -223,7 +225,9 @@ class CheckEmailExistRecordsView(View):
             self.response_format['message']='error'
             self.response_format['error'] = str(es)
         return JsonResponse(self.response_format, status=200)
-    
+
+
+
 class CheckMobileExistRecordsView(View):
     def __init__(self, **kwargs):
         self.response_format = {"status_code": 101, "message": "", "error": ""}

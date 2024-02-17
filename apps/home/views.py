@@ -1,7 +1,6 @@
 import json
 import logging
 import uuid
-from apps.bookings.models import BookingPrice, HotelRoomBookingBookingPrice, HotelRoomBookingCustomerDetails, RoomBookedCustomerDetails
 from apps.home.functions import ConvertBase64File
 from solo_core import settings
 from solo_core.helpers.module_helper import imageDeletion
@@ -23,10 +22,7 @@ from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 logger = logging.getLogger(__name__)
 from apps.users.models import Users
-from apps.property_management.models import PropertyManagement, PropertyManagementHotelRoom
-from apps.contactus.models import ContactUs
-from apps.review.models import CustomerReview
-
+from apps.category.models import Category
 
 class HomeView(View):
     def __init__(self):
@@ -35,76 +31,67 @@ class HomeView(View):
 
     def get(self, request, *args, **kwargs):
         
+        # if request.user.is_superuser:
+        #     user_queryset = Users.objects.filter(Q(user_type='2') & Q(is_active=True))
+        #     room_booking_obj = RoomBookedCustomerDetails.objects.all()
+        #     email_set = set()
+        #     user_queryset_list = []
+        #     for user in user_queryset:
+        #         if user.email not in email_set:
+        #             user_queryset_list.append({'full_name': user.full_name})
+        #             email_set.add(user.email)
+        #     for booking in room_booking_obj:
+        #         if booking.email_address not in email_set:
+        #             user_queryset_list.append({'full_name': booking.full_name})
+        #             email_set.add(booking.email_address)
+        #     self.context['total_customers'] = len(user_queryset_list)
+        # else:
+        #     property_management_obj = PropertyManagementHotelRoom.objects.filter(property_management__assigned_to=request.user).values_list('hotel_room', flat=True)
+        #     booking_obj = HotelRoomBookingBookingPrice.objects.filter(booked_room__room_id__in=property_management_obj).values_list('booked_room', flat=True)
+        #     user_list_obj = HotelRoomBookingCustomerDetails.objects.filter(booked_room__id__in=booking_obj).values_list('guest_details', flat=True)
+        #     result_list = len(set(user_list_obj))
+        #     self.context['total_customers'] = result_list if result_list else 0
+
+
+        # if request.user.is_superuser:
+        #     properties = PropertyManagement.objects.all()
+        # else:
+        #     properties = PropertyManagement.objects.filter(assigned_to=request.user)
+        # total_properties = properties.count()
+        # self.context['total_properties'] = total_properties
+
+        
+        
+        # contactus = ContactUs.objects.filter(enquiry_type='1')
+        # if contactus:
+        #     self.context['total_contacted']=contactus.filter(is_contacted=True).count()
+        #     self.context['total_not_contacted']=contactus.filter(is_contacted=False).count()
+
+        # else:
+        #     self.context['total_contacted']= 0
+        #     self.context['total_not_contacted']= 0
+        
+        # partner = ContactUs.objects.filter(enquiry_type='2')
+        # if partner:
+        #     self.context['total_contacted_partner']=partner.filter(is_contacted=True).count()
+        #     self.context['total_not_contacted_partner']=partner.filter(is_contacted=False).count()
+
+        # else:
+        #     self.context['total_contacted_partner']= 0
+        #     self.context['total_not_contacted_partner']= 0
+        
+        
+        
         if request.user.is_superuser:
-            user_queryset = Users.objects.filter(Q(user_type='2') & Q(is_active=True))
-            room_booking_obj = RoomBookedCustomerDetails.objects.all()
-            email_set = set()
-            user_queryset_list = []
-            for user in user_queryset:
-                if user.email not in email_set:
-                    user_queryset_list.append({'full_name': user.full_name})
-                    email_set.add(user.email)
-            for booking in room_booking_obj:
-                if booking.email_address not in email_set:
-                    user_queryset_list.append({'full_name': booking.full_name})
-                    email_set.add(booking.email_address)
-            self.context['total_customers'] = len(user_queryset_list)
+            categories = Category.objects.all()
         else:
-            property_management_obj = PropertyManagementHotelRoom.objects.filter(property_management__assigned_to=request.user).values_list('hotel_room', flat=True)
-            booking_obj = HotelRoomBookingBookingPrice.objects.filter(booked_room__room_id__in=property_management_obj).values_list('booked_room', flat=True)
-            user_list_obj = HotelRoomBookingCustomerDetails.objects.filter(booked_room__id__in=booking_obj).values_list('guest_details', flat=True)
-            result_list = len(set(user_list_obj))
-            self.context['total_customers'] = result_list if result_list else 0
-
-
-        if request.user.is_superuser:
-            properties = PropertyManagement.objects.all()
-        else:
-            properties = PropertyManagement.objects.filter(assigned_to=request.user)
-        total_properties = properties.count()
-        self.context['total_properties'] = total_properties
-
-        
-        
-        contactus = ContactUs.objects.filter(enquiry_type='1')
-        if contactus:
-            self.context['total_contacted']=contactus.filter(is_contacted=True).count()
-            self.context['total_not_contacted']=contactus.filter(is_contacted=False).count()
-
-        else:
-            self.context['total_contacted']= 0
-            self.context['total_not_contacted']= 0
-        
-        partner = ContactUs.objects.filter(enquiry_type='2')
-        if partner:
-            self.context['total_contacted_partner']=partner.filter(is_contacted=True).count()
-            self.context['total_not_contacted_partner']=partner.filter(is_contacted=False).count()
-
-        else:
-            self.context['total_contacted_partner']= 0
-            self.context['total_not_contacted_partner']= 0
-        
-        
-        
-        if request.user.is_superuser:
-            reviews = CustomerReview.objects.all()
-        else:
-            reviews = CustomerReview.objects.filter(property__assigned_to=request.user)
-        total_reviews = reviews.count()
-        self.context['total_reviews'] = total_reviews
+            categories = Category.objects.all()
+        total_categories = categories.count()
+        self.context['total_categories'] = total_categories
                 
              
                 
-        if not request.user.is_superuser:
-            property_management_obj = PropertyManagementHotelRoom.objects.filter(property_management__assigned_to=request.user).values_list('hotel_room', flat=True)
-            booking_obj = HotelRoomBookingBookingPrice.objects.filter(booked_room__room_id__in=property_management_obj).values_list('booked_price', flat=True)
-            booking_manual_obj = BookingPrice.objects.filter(is_enquiry=False, id__in=booking_obj)
-            booking_enquiry_obj = BookingPrice.objects.filter(is_enquiry=True, id__in=booking_obj)
-            self.context['manual_booking'] = booking_manual_obj.count()
-            self.context['enquiry_booking'] = booking_enquiry_obj.count()
-        else:
-            self.context['manual_booking'] = BookingPrice.objects.filter(is_enquiry=False).count()
-            self.context['enquiry_booking'] = BookingPrice.objects.filter(is_enquiry=True).count()
+
 
             
             
