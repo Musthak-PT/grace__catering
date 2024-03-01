@@ -80,7 +80,12 @@ var MCUpdateOrCreateAdmin = function () {
 
         submitButton.addEventListener('click', e => {
             e.preventDefault();
-
+            const btn = document.getElementById('create-or-update-admin-submit');
+            const text = document.getElementById('banner-loader-text');
+            btn.disabled = true;
+            btn.style.display = 'none';
+            text.style.display = 'block';
+            submitButton.setAttribute('data-kt-indicator', 'on');
             // Validate form before submit
             if (validator) {
                 validator.validate().then(function (status) {

@@ -44,7 +44,7 @@ class RoleView(View):
 class LoadRolesDatatable(BaseDatatableView):
 
     model = Role
-    
+
     order_columns = ['id','name','permissions']
     
     

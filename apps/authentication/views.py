@@ -33,7 +33,7 @@ class LoginView(View):
                 self.response_format['message'] = f"Success"
             else:
                 self.response_format['message'] = 'Invalid username or password'
-            messages.success(request, f"Logout Successfully ")
+            messages.success(request, f"Login Successfully Completed")
         except Exception as e:
             self.response_format['message'] = 'Something went wrong, Please try again later.'
             self.response_format['error'] = str(e)

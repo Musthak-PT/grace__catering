@@ -39,20 +39,22 @@ class AdminsView(View):
 
 
 class LoadAdminsDatatable(BaseDatatableView):
-    model = Users
     
-    order_columns = ['id','email''image','full_name','is_active']
+    
+    order_columns = ['id','email', 'image', 'full_name', 'is_active']
     
     def get_initial_queryset(self):
-
+        if not self.request.user.is_superuser:
+            model = Users.objects.filter(is_superuser=False)
+        else: 
+            model = Users.objects.all()
         filter_value = self.request.POST.get('columns[3][search][value]', None)
-        
         if filter_value == '1':
-            return self.model.objects.filter(is_active=1).exclude(is_admin=0)
+            return model.filter(is_active=1).exclude(is_admin=0)
         elif filter_value == '2':
-            return self.model.objects.filter(is_active=0).exclude(is_admin=0)
+            return model.filter(is_active=0).exclude(is_admin=0)
         else:
-            return self.model.objects.all().exclude(is_admin=0)
+            return model.all().exclude(is_admin=0)
 
 
     def filter_queryset(self, qs):
@@ -349,15 +351,14 @@ class AdminForgotPasswordPasswordView(View):
                     "user"                              : user_instance,
                     'token'                             : default_token_generator.make_token(user_instance),
                     'protocol'                          : 'https',
-                    'admin_forgot_password_page_url'    : settings.ADMIN_FORGOT_PASSWORD_PAGE_URL,
+                    'forgot_password_page_url'          : request.build_absolute_uri(reverse('admins:admin.reset_change_password')),
                     }
-                    
                     send_email = SendEmails()
                     mail_sending=threading.Thread(target=send_email.sendTemplateEmail, args=(subject, request, context, 'admin/email/password/admin_forgot_password.html',settings.EMAIL_HOST_USER, user_instance.email))
                     mail_sending.start()
 
                     self.response_format['status_code'] = 200
-                    self.response_format['message'] = "The email has been sent successfully. Please check your mail."
+                    self.response_format['message'] = 'Email send successfully and please check the mail'
                 else:
                     self.response_format['status_code'] = 400
                     self.response_format['message'] = 'User not found'
@@ -370,6 +371,7 @@ class AdminForgotPasswordPasswordView(View):
             self.response_format['message'] = str(es)
 
         return JsonResponse(self.response_format, status=200)
+
     
     
 """----------------- RESET PASSWORD-----------------------"""

@@ -68,21 +68,11 @@ INSTALLED_APPS = [
 LOCAL_APPS = [
     'apps.users',
     'apps.home',
-    'apps.contactus',
-    'apps.review',
     'apps.admins',
-    'apps.aboutus',
-    'apps.ourteam',
-    'apps.testimonial',
-    'apps.property_management',
-    'apps.questionandanswers',
-    'apps.bannerimage',
-    'apps.wishlist',
-    'apps.subscription_mail',
-    'apps.offer',
-    'apps.customers',
-    'apps.ad_management',
-    'apps.bookings',
+    'apps.category',
+    'apps.product',
+    'apps.user_management',
+    'apps.order',
 ]
 
 # additional plugin apps
@@ -113,7 +103,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    "apps.review.middleware.RequestMiddleware",
+    # "apps.review.middleware.RequestMiddleware",
 ]
 
 ROOT_URLCONF = 'solo_core.urls'

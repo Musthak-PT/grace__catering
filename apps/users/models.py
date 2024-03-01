@@ -80,8 +80,8 @@ def _user_acl_has_perm(user, perm, obj):
 class Users(AbstractBaseUser, PermissionsMixin):
     USER_TYPES = [
         ('1', 'Admin'),
-        ('2', 'Customer'),
-        ('3', 'Guests')
+        ('2', 'Staff'),
+        ('3', 'Customer')
     ]        
     user_type           = models.CharField(max_length=100,choices=USER_TYPES, blank=True, null=True)
     email               = models.EmailField(_('Email'), max_length = 255, unique = True, blank = True, null = True)
