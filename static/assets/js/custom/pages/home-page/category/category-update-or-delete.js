@@ -18,10 +18,7 @@ var MCUpdateOrCreateAdmin = function () {
                             notEmpty: {
                                 message: 'This field is required'
                             },
-                            regexp: {
-                                regexp: /^[A-Za-z ]+$/,
-                                message: 'Only characters and spaces are allowed'
-                            }
+                            
                         }
                     },
                     

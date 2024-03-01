@@ -11,20 +11,15 @@ from apps.users.models import Users
 class OrderProduct(AbstractDateTimeFieldBaseModel):
     slug                = models.SlugField(_('Slug'), max_length=100, editable=False, null=True, blank=True)
     product_name        = models.ForeignKey(Product, blank=True, related_name="product", on_delete=models.CASCADE, null=True)
-    customer_details    = models.ForeignKey(Users, blank=True, related_name="users", on_delete=models.CASCADE, null=True)
-    order_date          = models.DateField(null=True, blank=True)
-    order_time          = models.TimeField(null=True, blank=True)
-    quantity            = models.ImageField(null=True, blank=True)
+    customer_details    = models.CharField(max_length=90,null=True, blank=True)
+    order_date          = models.DateTimeField(null=True, blank=True)
+    
+    quantity            = models.CharField(max_length=90,null=True, blank=True)
+    
+    price       = models.CharField(max_length=90,null=True, blank=True)
+    Total=models.IntegerField(null=True)
     class Meta                : 
         verbose_name          = "Order Product"
         verbose_name_plural   = "Order Product"
         
-    def save(self, *args, **kwargs):
-        if not self.slug or self.id:
-            self.slug = slugify(str(self.quantity))
-            if OrderProduct.objects.filter(slug=self.quantity).exclude(pk=self.pk).exists():
-                self.slug = slugify(str(self.quantity)) + '-' + str(randint(1, 9999999))
-        super(OrderProduct, self).save(*args, **kwargs)
     
-    def __str__(self):
-        return self.id

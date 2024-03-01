@@ -1,0 +1,163 @@
+{% extends 'admin/layouts/apps.html' %}
+{% load static %}
+
+{% block content %}
+    <!-- begin::Content wrapper -->
+    <div class="d-flex flex-column flex-column-fluid">
+        {% include 'admin/layouts/breadcrumbs.html' %}
+
+        <!-- begin::Content -->
+        <div id="kt_app_content" class="app-content flex-column-fluid">
+            <!-- begin::Content container -->
+            <div id="kt_app_content_container" class="app-container container-xxl">
+                <!-- begin::Form -->
+                <form id="create-or-update-product-form" class="form d-flex flex-column flex-lg-row" method="POST" enctype="multipart/form-data" action="{% url 'order:order.create' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="instance_id" id="casestudy_id" value="{{instance.id}}" />
+
+                    <!-- begin::Main column -->
+                    <div class="d-flex flex-column flex-row-fluid gap-7 gap-lg-10">
+                        <!-- begin:::Tabs -->
+                        <ul class="nav nav-custom nav-tabs nav-line-tabs nav-line-tabs-2x border-0 fs-4 fw-bold mb-n2">
+                            <!-- begin:::Tab item -->
+                            <li class="nav-item">
+                                <a class="nav-link text-active-primary pb-4 active" data-bs-toggle="tab" href="#create-or-update-admin-general">Order Management</a>
+                            </li>
+                            <!-- end:::Tab item -->
+                        </ul>
+                        <!-- end:::Tabs -->
+                        <!-- begin::Tab content -->
+                        <div class="tab-content">
+                            <!-- begin::Tab pane -->
+                            <div class="tab-pane fade show active" id="create-or-update-admin-general" role="tab-panel">
+                                <div class="d-flex flex-column gap-7 gap-lg-10">
+                                    <div class="card card-flush py-4">
+                                        <div class="card-body pt-0">
+                                            <div id="product-section-container">
+                                                <!-- Template for product section -->
+                                              
+                                                <!-- End of product section -->
+                                            </div>
+
+                                            <!-- Add an "Add Item" button to dynamically add more product sections -->
+                                           
+                                            <div class="d-flex mb-10 flex-wrap gap-5 mt-10">
+                                                <div class="fv-row w-100 flex-md-root">
+                                                    <div class="mb-5 fv-row">
+                                                        <label class="required form-label">Customer Details </label>
+                                                        {% if instance.customer_details %}
+                                                            <input type="text" name="customer_details" value="{{instance.customer_details}}" class="form-control mb-2" maxlength='40' placeholder="Enter Customer Details" readonly />
+                                                        {% else %}
+                                                            <input type="text" name="customer_details" class="form-control mb-2" maxlength='40' placeholder="Enter Customer Details" />
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                                <div class="fv-row w-100 flex-md-root">
+                                                    <div class="mb-5 fv-row">
+                                                        <label class="required form-label">Order Date </label>
+                                                        {% if instance.order_date %}
+                                                            <input type="date" name="order_date" value="{{instance.order_date }}" class="form-control mb-2" maxlength='40' placeholder="Enter Order date" readonly />
+                                                        {% else %}
+                                                            <input type="date" name="order_date" class="form-control mb-2" maxlength='40' placeholder="Enter Order date" />
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                                <template id="product-section-template">
+                                                    <div class="fv-row w-100 flex-md-root">
+                                                        <div class="mb-5 fv-row">
+                                                            <label class="required form-label">Product Names</label>
+                                                            <select class="form-control mb-2 product-name" name="product_name[]" multiple>
+                                                                {% for product in instance.product_name.all %}
+                                                                    <option value="{{ product.id }}" selected>{{ product.name }}</option>
+                                                                {% endfor %}
+                                                                {% for product in products %}
+                                                                    <option value="{{ product.id }}">{{ product.id }}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                        
+                                                    </div>
+                                                    <div class="fv-row w-100 flex-md-root">
+                                                        <div class="mb-5 fv-row">
+                                                            <label class="required form-label">Quantity</label>
+                                                            <input type="text" class="form-control mb-2 quantity" maxlength='40' placeholder="Enter Quantity" name="quantity[]" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="fv-row w-100 flex-md-root">
+                                                        <div class="mb-5 fv-row">
+                                                            <label class="required form-label">Price</label>
+                                                            <input type="text" class="form-control mb-2 price" maxlength='40' placeholder="Enter Price" name="price[]" />
+                                                        </div>
+                                                    </div>
+                                                </template>
+                                                <button type="button" id="add-item-button" class="btn btn-primary">Add Item</button>
+                                            </div>
+                                            <div class="d-flex justify-content-end">
+                                                <!-- begin::Button -->
+                                                <a href="{% url 'order:order.index' %}" id="kt_ecommerce_add_product_cancel" class="btn btn-light me-5">Cancel</a>
+                                                <!-- end::Button -->
+                                                <!-- begin::Button -->
+                                                <button type="submit" id="create-or-update-product-submit" class="btn btn-primary">
+                                                    <span class="indicator-label">Save </span>
+                                                    <span class="indicator-progress" id="banner-loader-text">Please wait... 
+                                                        <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                                    </span>
+                                                </button>
+                                                <!-- end::Button -->
+                                                <!-- begin::Print Button -->
+
+                                                <button type="button" class="btn btn-secondary ms-3" onclick="printPage()">Print</button>
+                                                <!-- end::Print Button -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end::Tab pane -->
+                        </div>
+                        <!-- end::Tab content -->
+                    </div>
+                    <!-- end::Main column -->
+                </form>
+                <!-- end::Form -->
+            </div>
+            <!-- end::Content container -->
+        </div>
+        <!-- end::Content -->
+    </div>
+    <!-- end::Content wrapper -->
+{% endblock content %}
+
+{% block script %}
+    <script src="{% static 'assets/js/custom/pages/home-page/order/order-create-or-update.js' %}?time={% now 'h:i:s' %}"></script>
+    <script>
+        function printPage() {
+            window.print();
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+    // Counter to give unique IDs to the added product sections
+    let itemCount = 1;
+
+    // Function to clone and append a new product section
+    function addProductSection() {
+        const template = document.getElementById("product-section-template");
+        const clone = template.content.cloneNode(true);
+        const container = document.getElementById("product-section-container");
+
+        // Assign unique IDs to cloned elements
+        clone.querySelector(".product-name").name = `product_name_${itemCount}`;
+        clone.querySelector(".quantity").name = `quantity_${itemCount}`;
+        clone.querySelector(".price").name = `price_${itemCount}`;
+
+        container.appendChild(clone);
+
+        itemCount++;
+    }
+
+    // Event listener for the "Add Item" button
+    document.getElementById("add-item-button").addEventListener("click", addProductSection);
+});
+
+    </script>
+{% endblock script %}

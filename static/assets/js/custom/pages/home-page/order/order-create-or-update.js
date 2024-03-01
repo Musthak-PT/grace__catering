@@ -13,23 +13,23 @@ var MCUpdateOrCreateAdmin = function () {
             form,
             {
                 fields: {
-                    'product_name': {
-                        validators: {
-                            notEmpty: {
-                                message: 'This field is required'
-                            }
+                    // 'product_name': {
+                    //     validators: {
+                    //         notEmpty: {
+                    //             message: 'This field is required'
+                    //         }
                             
-                        }
-                    },
+                    //     }
+                    // },
 
-                    'category': {
-                        validators: {
-                            notEmpty: {
-                                message: 'This field is required'
-                            }
+                    // 'category': {
+                    //     validators: {
+                    //         notEmpty: {
+                    //             message: 'This field is required'
+                    //         }
                             
-                        }
-                    },
+                    //     }
+                    // },
                     
                 },
                 

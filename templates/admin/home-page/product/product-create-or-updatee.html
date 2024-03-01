@@ -19,7 +19,7 @@
             <!--begin::Content container-->
             <div id="kt_app_content_container" class="app-container container-xxl">
                 <!--begin::Form-->
-                <form id="create-or-update-category-form" class="form d-flex flex-column flex-lg-row"  method="POST" enctype="multipart/form-data"  action="{% url 'category:category.create' %}">
+                <form id="create-or-update-product-form" class="form d-flex flex-column flex-lg-row"  method="POST" enctype="multipart/form-data"  action="{% url 'product:product.create' %}">
                     {% csrf_token %}
                     <input type="hidden" name="instance_id" id="casestudy_id" value="{{instance.id}}" />
 
@@ -31,7 +31,7 @@
                         <ul class="nav nav-custom nav-tabs nav-line-tabs nav-line-tabs-2x border-0 fs-4 fw-bold mb-n2">
                             <!--begin:::Tab item-->
                             <li class="nav-item">
-                                <a class="nav-link text-active-primary pb-4 active" data-bs-toggle="tab" href="#create-or-update-admin-general">Category Management</a>
+                                <a class="nav-link text-active-primary pb-4 active" data-bs-toggle="tab" href="#create-or-update-admin-general">Product Management</a>
                             </li>
                             <!--end:::Tab item-->
                       
@@ -44,16 +44,26 @@
                                 <div class="d-flex flex-column gap-7 gap-lg-10">
                                     
                                     <div class="card card-flush py-4">
-                                        
-
-                                        
+                                                                                
                                         <div class="card-body pt-0 ">
                                             <div class="d-flex mb-10 flex-wrap gap-5 mt-10">
 
                                                 <div class="fv-row w-100 flex-md-root">
                                                     <div class="mb-5 fv-row">
-                                                        <label class="required form-label">Category Name</label>
-                                                        <input type="text" name="category_name" value="{{instance.category_name}}" class="form-control mb-2" maxlength='40' placeholder="Enter Category"   />
+                                                        <label class="required form-label">Product Name</label>
+                                                        <input type="text" name="product_name" value="{{instance.product_name}}" class="form-control mb-2" maxlength='40' placeholder="Enter Category"   />
+                                                    </div>
+                                                </div>
+
+                                                <div class="fv-row w-100 flex-md-root">
+                                                    <div class="mb-5 fv-row">
+                                                        <label class="required form-label">Category</label>
+                                                        <select name="category" class="form-control mb-2">
+                                                            <option value="" {% if not instance.category %}selected{% endif %}>Select Category</option>
+                                                            {% for category in categories %}
+                                                                <option value="{{ category.id }}" {% if instance.category and instance.category.id == category.id %}selected{% endif %}>{{ category.category_name }}</option>
+                                                            {% endfor %}
+                                                        </select>
                                                     </div>
                                                 </div>
                                                 
@@ -70,10 +80,10 @@
                         <!--end::Tab content-->
                         <div class="d-flex justify-content-end">
                             <!--begin::Button-->
-                            <a href="{% url 'category:category.index' %}" id="kt_ecommerce_add_product_cancel" class="btn btn-light me-5">Cancel</a>
+                            <a href="{% url 'product:product.index' %}" id="kt_ecommerce_add_product_cancel" class="btn btn-light me-5">Cancel</a>
                             <!--end::Button-->
                             <!--begin::Button-->
-                            <button type="submit" id="create-or-update-category-submit" class="btn btn-primary">
+                            <button type="submit" id="create-or-update-product-submit" class="btn btn-primary">
                                 <span class="indicator-label">Save </span>
                                 <span class="indicator-progress" id="banner-loader-text">Please wait... 
                                 <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
@@ -98,7 +108,7 @@
 {% block script %}
         
 
-    <script src="{% static 'assets/js/custom/pages/home-page/category/category-update-or-delete.js' %}?time={% now 'h:i:s' %}">
+    <script src="{% static 'assets/js/custom/pages/home-page/product/product-create-or-update.js' %}?time={% now 'h:i:s' %}">
 
     </script>
 {% endblock script %}

@@ -49,7 +49,7 @@
                         {% endwith %}
                         <!--begin::Add product-->
                         {% if request.user|check_permission:'auth.create_category' %}
-                        <a href="{% url 'category:category.create' %}" class="btn btn-primary">Create</a>
+                        <a href="{% url 'order:order.create' %}" class="btn btn-primary">Create</a>
                         <!--end::Add product-->
                         {%endif%}
                     </div>
@@ -104,11 +104,11 @@
     var api_config = {
         'datatable': "{% url 'order:load.order.datatable'%}",
         'csrfmiddlewaretoken': '{{ csrf_token }}',
-        'active_inactive_company': "{% url 'category:category.status_change' %}",
-        'edit_url': "{% url 'category:category.update' '0' %}",
-        'delete_records': "{% url 'category:category.records.destroy'%}",
+        'active_inactive_company': "{% url 'order:order.status_change' %}",
+        'edit_url': "{% url 'order:order.update' '0' %}",
+        'delete_records': "{% url 'order:order.records.destroy'%}",
         
     };
 </script>
-<script src="{% static 'assets/js/custom/pages/home-page/category/category-datatable.js' %}?time={% now 'h:i:s' %}"></script>
+<script src="{% static 'assets/js/custom/pages/home-page/order/order-datatable.js' %}?time={% now 'h:i:s' %}"></script>
 {% endblock script %}

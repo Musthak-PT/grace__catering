@@ -73,7 +73,7 @@ class ProductCreateOrUpdateView(View):
         self.context = {"breadcrumbs": [], }
         self.action = "Create"
         self.context['title'] = 'Product'
-        self.template = 'admin/home-page/product/product-create-or-update.html'
+        self.template = 'admin/home-page/product/product-create-or-updatee.html'
 
     def get(self, request, *args, **kwargs):
         id = URLEncryptionDecryption.dec(kwargs.pop('id', None))
