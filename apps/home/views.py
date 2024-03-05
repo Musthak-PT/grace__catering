@@ -23,6 +23,7 @@ from django.core.files.storage import default_storage
 logger = logging.getLogger(__name__)
 from apps.users.models import Users
 from apps.category.models import Category
+from apps.product.models import Product
 
 class HomeView(View):
     def __init__(self):
@@ -88,6 +89,13 @@ class HomeView(View):
             categories = Category.objects.all()
         total_categories = categories.count()
         self.context['total_categories'] = total_categories
+
+        if request.user.is_superuser:
+            products = Product.objects.all()
+        else:
+            products = Product.objects.all()
+        total_products = products.count()
+        self.context['total_products'] = total_products
                 
              
                 

@@ -30,7 +30,15 @@ var DatatablesServerSide = function() {
                 },
             },
             columns: [
-                { data: 'id' },
+                { data: 'id' ,orderable: false},
+                {
+                    data: null,
+                    orderable: false,
+                    searchable: false,
+                    render: function (data, type, row, meta) {
+                        return meta.row + 1 + meta.settings._iDisplayStart;
+                    }
+                },
                 { data: 'product_name',orderable: false },
                 { data: 'category_name',orderable: false },
                 { data: 'is_active' },
@@ -51,7 +59,7 @@ var DatatablesServerSide = function() {
                 {
                     searchable: false,
                     orderable: false,
-                    targets: 3,
+                    targets: 4,
                     render: function(data, type, row) {
                         let label_badge_change = '';
                         if(data == 'True'){

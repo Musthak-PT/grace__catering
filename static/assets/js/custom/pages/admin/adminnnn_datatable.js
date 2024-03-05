@@ -12,20 +12,54 @@ var MCUpdateOrCreateAdmin = function () {
         const submitButton = document.getElementById('create-or-update-admin-submit');
 
 
+
         validator = FormValidation.formValidation(
             form,
             {
                 fields: {
-                    'name': {
+                    'full_name': {
+                        validators: {
+                            notEmpty: {
+                                message: 'This field is required'
+                            },
+                            regexp: {
+                                regexp: /^[A-Za-z\s]+$/,
+                                message: 'Only characters are allowed'
+                            }
+                        }
+                    },
+                    'username': {
                         validators: {
                             notEmpty: {
                                 message: 'This field is required'
                             }
                         }
                     },
-                   
-                    
-                    'description': {
+                    'groups': {
+                        validators: {
+                            notEmpty: {
+                                message: 'This field is required'
+                            }
+                        }
+                    },
+                    'password': {
+                        validators: {
+                            notEmpty: {
+                                message: 'This field is required'
+                            }
+                        }
+                    },
+                    'email': {
+                        validators: {
+                            notEmpty: {
+                                message: 'This field is required'
+                            },
+                            emailAddress: {
+                                message: 'The value is not a valid email address'
+                            }
+                        }
+                    },
+                    'mobile': {
                         validators: {
                             notEmpty: {
                                 message: 'This field is required'
@@ -44,18 +78,11 @@ var MCUpdateOrCreateAdmin = function () {
                 }
             }
         );
-        // if (isImageEdit) {
-            // delete validatorsConfig.fields['property_image'].validators.notEmpty;
-        // }
+
 
         submitButton.addEventListener('click', e => {
             e.preventDefault();
-            const btn = document.getElementById('create-or-update-admin-submit');
-            const text = document.getElementById('banner-loader-text');
-            btn.disabled = true;
-            btn.style.display = 'none';
-            text.style.display = 'block';
-            submitButton.setAttribute('data-kt-indicator', 'on');
+
             // Validate form before submit
             if (validator) {
                 validator.validate().then(function (status) {
@@ -86,7 +113,7 @@ var MCUpdateOrCreateAdmin = function () {
                         // Enable button
                         submitButton.disabled = false;
                         Swal.fire({
-                            html: "Please enter the fields.",
+                            html: "Sorry, looks like there are some errors detected, please try again.",
                             icon: "error",
                             buttonsStyling: false,
                             confirmButtonText: "Ok, got it!",

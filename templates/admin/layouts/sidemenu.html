@@ -38,7 +38,7 @@
             data-kt-scroll-wrappers="#kt_app_sidebar_menu" data-kt-scroll-offset="5px" data-kt-scroll-save-state="true">
             <div class="menu menu-column menu-rounded menu-sub-indention px-3" id="#kt_app_sidebar_menu"
                 data-kt-menu="true" data-kt-menu-expand="false">
-
+                {% if request.user|check_permission:'auth.view_dashboard' %}
                 <div class="menu-item">
                     <a class="menu-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}"
                         href="{% url 'home:dashboard' %}">
@@ -52,7 +52,7 @@
                         <span class="menu-title">Dashboard</span>
                     </a>
                 </div>
-
+                {% endif %}
                 <!-- <div class="menu-item">
                     <a class="menu-link {% if request.resolver_match.url_name == 'order.index' %}active{% endif %}"
                         href="{% url 'order:order.index' %}">
@@ -67,7 +67,7 @@
                     </a>
                 </div> -->
 
-
+                {% if request.user|check_permission:'auth.view_order' %}
                 <div data-kt-menu-trigger="click"
                     class="menu-item menu-accordion {% if request.resolver_match.url_name in 'order:order.index,order.create,order.update' %} show {% endif %}">
                     <span class="menu-link">
@@ -81,7 +81,7 @@
                         <span class="menu-title">Order Management</span>
                         <span class="menu-arrow"></span>
                     </span>
-
+                    {% if request.user|check_permission:'auth.view_order' %}
                     <div class="menu-sub menu-sub-accordion">
                         <div class="menu-item">
                             <a class="menu-link {% if request.resolver_match.url_name in 'order:order.index,order.create,order.update' %} active {% endif %}"
@@ -95,12 +95,15 @@
                             </a>
                         </div>
                     </div>
+                    {% endif %}
 
 
                    
                 </div>
+                {% endif %}
 
                 
+                {% if request.user|check_permission:'auth.view_product' or request.user|check_permission:'auth.view_category' %}
 
                 <div data-kt-menu-trigger="click"
                     class="menu-item menu-accordion {% if request.resolver_match.url_name in 'product.index,product.create, product.update,category.index,category.create, category.update' %} show {% endif %}">
@@ -132,7 +135,7 @@
                     </div>
                     {% endif %}
 
-
+                    {% if request.user|check_permission:'auth.view_product' %}
                     <div class="menu-sub menu-sub-accordion">
                         <div class="menu-item">
                             <a class="menu-link {% if request.resolver_match.url_name in 'product.index,product.create,product.update' %} active {% endif %}"
@@ -146,8 +149,12 @@
                             </a>
                         </div>
                     </div>
-                </div>
+                    {% endif %}
 
+                </div>
+                {% endif %}
+
+                {% if request.user|check_permission:'auth.view_roles' or request.user|check_permission:'auth.view_groups' or request.user|check_permission:'auth.view_admin' %}
                 <div data-kt-menu-trigger="click"
                     class="menu-item menu-accordion {% if request.resolver_match.url_name in 'roles.index,roles.create,roles.update,admins.index,admins.create,admins.update,groups.index,groups.create,groups.update' %} show {% endif %}">
                     <span class="menu-link">
@@ -162,7 +169,10 @@
                         <span class="menu-arrow"></span>
                     </span>
 
+                    
+
                     <div class="menu-sub menu-sub-accordion">
+                        {% if request.user|check_permission:'auth.view_roles' %}
                         <div class="menu-item">
                             <a class="menu-link {% if request.resolver_match.url_name in 'roles.index,roles.create,roles.update' %} active {% endif %}"
                                 href="{% url 'users:roles.index' %}">
@@ -174,7 +184,8 @@
                                 <span class="menu-title">Roles</span>
                             </a>
                         </div>
-
+                        {% endif %}
+                        {% if request.user|check_permission:'auth.view_groups' %}
                         <div class="menu-item">
                             <a class="menu-link {% if request.resolver_match.url_name in 'groups.index,groups.create,groups.update' %} active {% endif %}"
                                 href="{% url 'users:groups.index' %}">
@@ -188,7 +199,9 @@
                                 <span class="menu-title">Groups</span>
                             </a>
                         </div>
+                        {% endif %}
 
+                        {% if request.user|check_permission:'auth.view_admin' %}
                         <div class="menu-item">
                             <a class="menu-link {% if request.resolver_match.url_name in 'admins.index,admins.create,admins.update,' %} active {% endif %}"
                                 href="{% url 'admins:admins.index' %}">
@@ -200,9 +213,11 @@
                                 <span class="menu-title">Admin</span>
                             </a>
                         </div>
+                        {% endif %}
                         
                     </div>
                 </div>
+                {% endif %}
 
             </div>
         </div>

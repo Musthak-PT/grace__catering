@@ -170,37 +170,88 @@
       "content_type":4,
       "label": "Category"
     }
-  }, 
+  },
+
+
+
+  {
+    "model": "auth.Permission",
+    "fields": {
+      "codename":"view_product",
+      "name":"view Product",
+      "content_type":4,
+      "label": "Product"
+    }
+  },
+  {
+    "model": "auth.Permission",
+    "fields": {
+      "codename":"delete_product",
+      "name":"Delete Product",
+      "content_type":4,
+      "label": "Product"
+    }
+  },
+  {
+    "model": "auth.Permission",
+    "fields": {
+      "codename":"edit_product",
+      "name":"Edit Product",
+      "content_type":4,
+      "label": "Product"
+    }
+  },
+  {
+    "model": "auth.Permission",
+    "fields": {
+      "codename":"create_product",
+      "name":"Create Product",
+      "content_type":4,
+      "label": "Product"
+    }
+  },
+  
+  
+
+  {
+    "model": "auth.Permission",
+    "fields": {
+      "codename":"view_order",
+      "name":"view Order",
+      "content_type":4,
+      "label": "Order"
+    }
+  },
+  {
+    "model": "auth.Permission",
+    "fields": {
+      "codename":"delete_order",
+      "name":"Delete Order",
+      "content_type":4,
+      "label": "Order"
+    }
+  },
+  {
+    "model": "auth.Permission",
+    "fields": {
+      "codename":"edit_order",
+      "name":"Edit Order",
+      "content_type":4,
+      "label": "Order"
+    }
+  },
+  {
+    "model": "auth.Permission",
+    "fields": {
+      "codename":"create_order",
+      "name":"Create Order",
+      "content_type":4,
+      "label": "Order"
+    }
+  },
 
   
-  {
-    "model": "auth.Permission",
-    "fields": {
-      "codename":"view_customer",
-      "name":"view customer",
-      "content_type":4,
-      "label": "Customer"
-    }
-  },
-  {
-    "model": "auth.Permission",
-    "fields": {
-      "codename":"view_promotion",
-      "name":"view promotion",
-      "content_type":4,
-      "label": "Promotion"
-    }
-  },
 
-  {
-    "model": "auth.Permission",
-    "fields": {
-      "codename":"view_subscription",
-      "name":"view subscription ",
-      "content_type":4,
-      "label": "Subscription"
-    }
-  },
 
   {
     "model": "auth.Permission",

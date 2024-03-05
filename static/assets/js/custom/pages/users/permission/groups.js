@@ -35,8 +35,16 @@ var DatatablesAndCRUDOperationServerSide = function() {
             },
             columns: [
                 {data: 'id'},
-                {data: 'name'},
-                {data: 'role'},
+                {
+                    data: null,
+                    orderable: false,
+                    searchable: false,
+                    render: function (data, type, row, meta) {
+                        return meta.row + 1 + meta.settings._iDisplayStart;
+                    }
+                },
+                {data: 'name',orderable: false},
+                {data: 'role',orderable: false},
                 {data: 'id'},
             ],
             columnDefs: [
@@ -159,8 +167,8 @@ var DatatablesAndCRUDOperationServerSide = function() {
                     icon: "warning",
                     showCancelButton: true,
                     buttonsStyling: false,
-                    confirmButtonText: "Yes, delete!",
-                    cancelButtonText: "No, cancel",
+                    confirmButtonText: "Yes",
+                    cancelButtonText: "No",
                     customClass: {
                         confirmButton: "btn fw-bold btn-danger",
                         cancelButton: "btn fw-bold btn-success"
