@@ -4,7 +4,7 @@ from solo_core import settings
 
 def admin_register_completion_mail(request, user_instances, current_password, email):
     try:
-        subject = "This is From SOLO"
+        subject = "This is From Grace Catering & Events"
         context = {
             'full_name'           : user_instances.full_name,
             'phone_number'        : user_instances.phone,
@@ -20,5 +20,4 @@ def admin_register_completion_mail(request, user_instances, current_password, em
         x = threading.Thread(target=send_email.sendTemplateEmail, args=(subject, request, context, 'admin/email/admin-register-mail/customer_registeration.html', email, settings.EMAIL_HOST_USER))
         x.start()
     except Exception as es:
-        print("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", es)
         pass

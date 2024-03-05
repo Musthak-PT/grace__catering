@@ -6,7 +6,7 @@ from solo_core.helpers.mail_fuction import SendEmails
 def customer_registeration_mail_send(request, instance):
     try:
         user_email = instance.email,
-        subject = "This is From SOLO"
+        subject = "This is From Grace"
         context = {
             'full_name'           : instance.full_name,
             'email'               : instance.email,

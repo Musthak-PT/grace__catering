@@ -8,12 +8,12 @@ from drf_yasg import openapi
 from django.views.static import serve
 from solo_core.views import page_not_found_view, custom_500
 
-admin.site.site_header = "Solo"
-admin.site.site_title = "Solo"
+admin.site.site_header = "Grace"
+admin.site.site_title = "Grace"
 
 schema_view = get_schema_view(
    openapi.Info(
-      title="SOLO",
+      title="Grace",
       default_version='v1',
       terms_of_service="",
       contact=openapi.Contact(email="musthakpt786@gmail.com"),

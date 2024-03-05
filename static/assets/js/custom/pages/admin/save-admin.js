@@ -31,6 +31,13 @@ var MCUpdateOrCreateAdmin = function () {
                             }
                         }
                     },
+                    'password': {
+                        validators: {
+                            notEmpty: {
+                                message: 'This field is required'
+                            }
+                        }
+                    },
                     'email': {
                         validators: {
                             notEmpty: {

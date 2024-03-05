@@ -216,7 +216,7 @@ var DatatablesServerSide = function() {
                 // Select parent row
                 const parent = e.target.closest('tr');
                 // Get customer name
-                const userName = parent.querySelectorAll('td')[1].innerText;
+                const userName = parent.querySelectorAll('td')[2].innerText;
 
                 //     // SweetAlert2 pop up --- official docs reference: https://sweetalert2.github.io/
                 Swal.fire({
@@ -224,11 +224,11 @@ var DatatablesServerSide = function() {
                     icon: "warning",
                     showCancelButton: true,
                     buttonsStyling: false,
-                    confirmButtonText: "Yes, delete!",
-                    cancelButtonText: "No, cancel",
+                    confirmButtonText: "Yes",
+                    cancelButtonText: "No",
                     customClass: {
                         confirmButton: "btn fw-bold btn-danger",
-                        cancelButton: "btn fw-bold btn-active-light-primary"
+                        cancelButton: "btn fw-bold btn-success"
                     }
                 }).then(function(result) {
                     if (result.value) {
@@ -304,8 +304,8 @@ var DatatablesServerSide = function() {
                     confirmButtonText: "Yes",
                     cancelButtonText: "No, return",
                     customClass: {
-                        confirmButton: "btn btn-primary",
-                        cancelButton: "btn btn-active-light"
+                        confirmButton: "btn fw-bold btn-danger",
+                        cancelButton: "btn fw-bold btn-success"
                     }
                 }).then(function(result){
                     if(result.value){               
@@ -376,11 +376,11 @@ var DatatablesServerSide = function() {
                 showCancelButton: true,
                 buttonsStyling: false,
                 showLoaderOnConfirm: true,
-                confirmButtonText: "Yes, delete!",
-                cancelButtonText: "No, cancel",
+                confirmButtonText: "Yes",
+                cancelButtonText: "No",
                 customClass: {
                     confirmButton: "btn fw-bold btn-danger",
-                    cancelButton: "btn fw-bold btn-active-light-primary"
+                    cancelButton: "btn fw-bold btn-success"
                 },
             }).then(function(result) {
                 if (result.value) {

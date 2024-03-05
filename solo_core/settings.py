@@ -336,7 +336,7 @@ GET_CANDIDATE_CV_PATH     = os.environ.get('GET_CANDIDATE_CV_PATH')
 if 'EMAIL_SENDER_NAME' in os.environ:
     EMAIL_SENDER_NAME = os.environ.get('EMAIL_SENDER_NAME')
 else:
-    EMAIL_SENDER_NAME = 'Solo'
+    EMAIL_SENDER_NAME = 'Grace'
 
 
 
