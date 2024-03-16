@@ -12,5 +12,7 @@ urlpatterns = [
         path('order', login_required(views.LoadOrderDatatable.as_view()), name='load.order.datatable'),
         path('destroy_records/', login_required(views.DestroyorderRecordsView.as_view()), name='order.records.destroy'),
         path('active-or-inactive/', login_required(views.OrderStatusChange.as_view()), name="order.status_change"),
+
+        path('OrderPrintDetailsView/', login_required(views.OrderPrintDetailsView.as_view()), name="order.OrderPrintDetailsView"),
     ])),
 ]

@@ -9,17 +9,16 @@ from apps.users.models import Users
 # Create your models here.
 
 class OrderProduct(AbstractDateTimeFieldBaseModel):
-    slug                = models.SlugField(_('Slug'), max_length=100, editable=False, null=True, blank=True)
-    product_name        = models.ForeignKey(Product, blank=True, related_name="product", on_delete=models.CASCADE, null=True)
-    customer_details    = models.CharField(max_length=90,null=True, blank=True)
-    order_date          = models.DateTimeField(null=True, blank=True)
+    customer_details = models.CharField(max_length=90, null=True, blank=True)
+    order_date = models.DateTimeField(null=True, blank=True)
+    products = models.ManyToManyField(Product, through='OrderItem')
     
-    quantity            = models.CharField(max_length=90,null=True, blank=True)
-    
-    price       = models.CharField(max_length=90,null=True, blank=True)
-    Total=models.IntegerField(null=True)
-    class Meta                : 
-        verbose_name          = "Order Product"
-        verbose_name_plural   = "Order Product"
-        
-    
+class OrderItem(AbstractDateTimeFieldBaseModel):
+    order = models.ForeignKey(OrderProduct, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+
+
+    def __str__(self):
+        return f"{self.product} - Quantity: {self.quantity}, Price: {self.price}"

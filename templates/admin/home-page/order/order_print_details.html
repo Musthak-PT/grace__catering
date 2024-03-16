@@ -1,0 +1,34 @@
+<!-- order_print_details.html -->
+<div class="modal-header">
+    <h5 class="modal-title" id="orderDetailsModalLabel">Order Details</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body">
+    <h6>Order ID: {{ order_details.order_id }}</h6>
+    <p>Order Date: {{ order_details.order_date }}</p>
+    <p>Status: {{ order_details.status }}</p>
+
+    <!-- Table to display order details including order items -->
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in order_details.order_items %}
+            <tr>
+                <td>{{ item.product }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.price }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+    <button type="button" class="btn btn-primary" onclick="printOrderDetails()">Print</button>
+</div>

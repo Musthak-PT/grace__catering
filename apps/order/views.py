@@ -7,6 +7,7 @@ from django.urls import reverse
 from django_datatables_view.base_datatable_view import BaseDatatableView
 from django.db.models import Q
 from django.utils.html import escape
+from pydantic import ValidationError
 from solo_core.helpers.signer import URLEncryptionDecryption
 from django.contrib import messages
 from django.http import JsonResponse
@@ -43,7 +44,6 @@ class LoadOrderDatatable(BaseDatatableView):
 
     def get_initial_queryset(self):
         filter_value = self.request.POST.get('columns[3][search][value]', None)
-        print("Filter Value:", filter_value)
         if filter_value == '1':
             return self.model.objects.filter(is_active=True).order_by('-id')
         elif filter_value == '2':
@@ -53,7 +53,6 @@ class LoadOrderDatatable(BaseDatatableView):
 
     def filter_queryset(self, qs):
         search = self.request.POST.get('search[value]', None)
-        print("Search Value:", search)
         if search:
             qs = qs.filter(
                 Q(corder_date__istartswith=search)
@@ -94,6 +93,186 @@ from django.contrib import messages
 from .models import OrderProduct, Product
 
 
+from datetime import datetime
+from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse
+from django.views import View
+from django.contrib import messages
+
+from .models import OrderProduct
+ # Assuming you have a utility for URL encryption/decryption
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
+from django.views import View
+from django.contrib import messages
+from django.http import JsonResponse
+
+from .models import OrderProduct
+  # Assuming you have a utility for URL encryption/decryption
+from datetime import datetime
+
+# views.py
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.views import View
+from .models import OrderProduct, OrderItem, Product
+from django.urls import reverse
+from django.contrib import messages
+from datetime import datetime
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.views import View
+from django.urls import reverse
+from datetime import datetime
+from .models import OrderProduct, OrderItem, Product
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.views import View
+from django.urls import reverse
+from datetime import datetime
+from .models import OrderProduct, OrderItem, Product
+
+from django.contrib import messages
+
+from django.contrib import messages
+from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
+from django.views import View
+from datetime import datetime
+from .models import OrderProduct, OrderItem
+
+
+from django.contrib import messages
+from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
+from django.views import View
+from datetime import datetime
+from .models import OrderProduct, OrderItem
+
+# Import necessary modules
+from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse
+from django.views import View
+from django.http import HttpResponse
+from django.contrib import messages
+from .models import OrderProduct, OrderItem  # Import your models
+ # Import your utility function
+ # Assuming you have a Product model
+
+# Import datetime for handling date fields
+from datetime import datetime
+
+# Define your view class
+from django.shortcuts import render, get_object_or_404, redirect
+from django.views import View
+from django.http import HttpResponse
+from django.urls import reverse
+from django.contrib import messages
+
+
+# views.py
+from django.shortcuts import render, redirect, get_object_or_404
+from django.views import View
+from .models import OrderProduct, OrderItem, Product
+ # If you have a utility function for URL encryption/decryption
+from django.contrib import messages
+from datetime import datetime
+from django.shortcuts import render, redirect, get_object_or_404
+from django.views import View
+from django.http import JsonResponse
+from django.urls import reverse
+from django.contrib import messages
+from datetime import datetime
+from .models import OrderProduct, OrderItem, Product
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.views import View
+from django.urls import reverse
+from django.http import JsonResponse
+from django.contrib import messages
+
+from .models import OrderProduct, OrderItem
+
+ # Replace 'products' with your actual app name
+
+from django.shortcuts import render, get_object_or_404
+from django.views import View
+from django.http import JsonResponse
+from django.urls import reverse
+from django.utils import timezone
+from django.contrib import messages
+from datetime import datetime
+from .models import OrderProduct, OrderItem
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.views import View
+from django.http import JsonResponse
+from django.urls import reverse
+from django.contrib import messages
+from datetime import datetime
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.http import JsonResponse
+from django.views import View
+from django.urls import reverse
+from django.contrib import messages
+from .models import OrderProduct, OrderItem
+ # Import your forms
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.http import JsonResponse
+from django.views import View
+from django.urls import reverse
+from django.contrib import messages
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.http import JsonResponse
+from django.views import View
+from django.urls import reverse
+from django.contrib import messages
+from django.db import transaction
+ # Import your utility function
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.http import JsonResponse
+from django.views import View
+from django.urls import reverse
+from django.contrib import messages
+# Import your utility function
+
+from django.shortcuts import render, get_object_or_404
+from django.views import View
+from django.http import JsonResponse
+from django.urls import reverse
+from django.utils import timezone
+from django.contrib import messages
+from datetime import datetime
+from .models import OrderProduct, OrderItem
+from django.shortcuts import render, get_object_or_404, redirect
+from django.views import View
+from django.http import JsonResponse
+from django.urls import reverse
+from django.contrib import messages
+from datetime import datetime
+from django.shortcuts import render, redirect, get_object_or_404
+from django.views import View
+from django.http import JsonResponse
+from django.urls import reverse
+from django.contrib import messages
+# Assuming this utility is available in your project
+
+from django.http import JsonResponse
+from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
+from django.views import View
+from django.core.exceptions import ValidationError
+from django.contrib import messages
+
+
 class OrderCreateOrUpdateView(View):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -106,19 +285,23 @@ class OrderCreateOrUpdateView(View):
         id = URLEncryptionDecryption.dec(kwargs.pop('id', None))
         if id:
             self.action = "Update"
-            self.context['instance'] = get_object_or_404(OrderProduct, id=id)
+            instance = get_object_or_404(OrderProduct, id=id)
+            self.context['instance'] = instance
+            self.context['order_items'] = instance.orderitem_set.all()
 
-        # Retrieve products and add them to the context
+            # Pass selected product IDs to the template
+            selected_product_ids = [item.product.id for item in instance.orderitem_set.all()]
+            self.context['selected_product_ids'] = selected_product_ids
+
         products = Product.objects.all()
         self.context['products'] = products
 
-        self.generateBreadcrumbs()
+        self.generate_breadcrumbs()
         return render(request, self.template, context=self.context)
 
-    def generateBreadcrumbs(self):
+    def generate_breadcrumbs(self):
         self.context['breadcrumbs'].append({"name": "Home", "route": reverse('home:dashboard'), 'active': False})
         self.context['breadcrumbs'].append({"name": "{} Order".format(self.action), "route": '', 'active': True})
-
 
     def post(self, request, *args, **kwargs):
         try:
@@ -130,41 +313,84 @@ class OrderCreateOrUpdateView(View):
                 instance = OrderProduct()
                 self.action = 'Created'
 
-            # Save the instance to get an ID before adding products
+            instance.customer_details = request.POST.get('customer_details', None)
+
+            order_date_str = request.POST.get('order_date', None)
+            if order_date_str:
+                instance.order_date = datetime.strptime(order_date_str, "%Y-%m-%d")
+
             instance.save()
 
-            # Assuming 'product_name', 'quantity', 'price' are multiple inputs with the same name
-            # Inside your OrderCreateOrUpdateView
-            product_names = request.POST.getlist('product_name[]')
-            quantities = request.POST.getlist('quantity[]')
-            prices = request.POST.getlist('price[]')
+            # Clear existing order items
+            instance.orderitem_set.all().delete()
 
-            # Clear existing product_name entries if it is not None
-            if instance.product_name is not None:
-                instance.product_name.clear()
+            total_price = 0
 
-            # Add the new products
-            for product_name, quantity, price in zip(product_names, quantities, prices):
-                product = Product.objects.get(id=product_name)
-                instance.product_name.add(product, through_defaults={'quantity': quantity, 'price': price})
+            # Iterate over product data
+            for i in range(1, int(request.POST.get('itemCount', 1)) + 1):
+                product_id = request.POST.get(f'product_name[{i}]')
+                quantity = request.POST.get(f'quantity[{i}]')
+                price = request.POST.get(f'price[{i}]')
 
-            instance.customer_details = request.POST.get('customer_details', None)
-            instance.order_date = request.POST.get('order_date', None)
+                print(f"Processing item {i} - Product ID: {product_id}, Quantity: {quantity}, Price: {price}")
 
-            # Format order_date using strftime
-            
+                if product_id and quantity and price:
+                    if quantity == 'DefaultQuantity' or price == 'DefaultPrice':
+                        print("Skipping iteration due to default quantity or price.")
+                        continue  # Skip this iteration if quantity or price is set to default
+
+                    try:
+                        product = Product.objects.get(id=product_id)
+                    except Product.DoesNotExist:
+                        print(f"Product with ID {product_id} does not exist.")
+                        continue  # Skip this iteration if the product doesn't exist
+
+                    try:
+                        order_item = OrderItem.objects.create(
+                            product=product,
+                            quantity=quantity,
+                            price=price,
+                            order=instance
+                        )
+                    except ValidationError as e:
+                        print(f"Validation error: {str(e)}")
+                        continue  # Skip this iteration if there's a validation error
+
+                    total_price += int(quantity) * float(price)
+
+                    # Print order item information
+                    print(f"OrderItem - Product: {product}, Quantity: {quantity}, Price: {price}")
+                    print(f"OrderItem saved: {order_item}")
+
+            # Add a final print statement to check if the loop is executed
+            print("Loop completed")
+
+            instance.total = total_price
             instance.save()
 
             messages.success(request, f"Data Successfully " + self.action)
+
+            # Print the received POST data
+            print("POST data received:", request.POST)
+
+            return redirect('order:order.index')
 
         except Exception as e:
             messages.error(request, f"Something went wrong. {str(e)}")
             if instance_id is not None and instance_id != '':
                 return redirect('order:order.update', id=URLEncryptionDecryption.dec(int(instance_id)))
-            return redirect('order:order.create')
-        return redirect('order:order.index')
+            return redirect('order:order.index')
+        
 
     
+from django.shortcuts import render, get_object_or_404, redirect
+from django.views import View
+from django.http import JsonResponse
+from django.urls import reverse
+from django.contrib import messages
+from datetime import datetime
+
+
 
 from django.views import View
 from django.contrib import messages
@@ -209,3 +435,59 @@ class OrderStatusChange(View):
             self.response_format['message'] = 'error'
             self.response_format['error'] = str(es)
         return JsonResponse(self.response_format, status=200)
+
+
+
+from django.http import HttpResponse
+from django.template.loader import get_template
+from django.views import View
+from xhtml2pdf import pisa
+
+from .models import OrderProduct
+
+class OrderPDFView(View):
+    template_name = 'order_pdf_template.html'
+
+    def get_context_data(self, order_id):
+        order = OrderProduct.objects.get(id=order_id)
+        return {'order': order}
+
+    def get(self, request, *args, **kwargs):
+        order_id = kwargs.get('order_id')
+        template = get_template(self.template_name)
+        context = self.get_context_data(order_id)
+        html = template.render(context)
+
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="order_{order_id}.pdf"'
+
+        pdf_result = pisa.CreatePDF(html, dest=response)
+        if pdf_result.err:
+            return HttpResponse('Error generating PDF')
+
+        return response
+
+class OrderPrintDetailsView(View):
+    template_name = 'admin/home-page/order/order_print_details.html'
+
+    def get(self, request, *args, **kwargs):
+        order_id = kwargs.get('order_id')
+
+        # Assuming OrderProduct is your model for orders, and OrderItem is a related model for order items
+        try:
+            order = OrderProduct.objects.get(id=order_id)
+            order_items = order.orderitem_set.all()
+
+            order_details = {
+                'order_id': order.id,
+                'order_date': order.order_date.strftime('%Y-%m-%d'),
+                'status': order.status,  # Assuming status is a field in OrderProduct model
+                'order_items': [
+                    {'product': item.product.name, 'quantity': item.quantity, 'price': item.price}
+                    for item in order_items
+                ],
+            }
+
+            return render(request, self.template_name, {'order_details': order_details})
+        except OrderProduct.DoesNotExist:
+            return JsonResponse({'error': 'Order not found'}, status=404)

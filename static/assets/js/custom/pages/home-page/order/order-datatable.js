@@ -30,23 +30,16 @@ var DatatablesServerSide = function() {
                 },
             },
             columns: [
+           
                 { data: 'id' },
-                { data: 'order_date' },
+                { data: 'order_date',orderable: false },
                 { data: 'is_active' },
                 { data: 'id' }
             ],
 
             columnDefs: [
-                {
-                    targets: 0,
-                    orderable: false,
-                    render: function (data) {
-                        return `
-                            <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                <input class="form-check-input checkbox-input-id" type="checkbox" value="${data}" />
-                            </div>`;
-                    }
-                },
+                
+        
                 {
                     searchable: false,
                     orderable: false,
@@ -59,6 +52,16 @@ var DatatablesServerSide = function() {
                             label_badge_change =  `<span style="cursor:pointer" data-id=${row.id}  class="btn btn-sm btn-outline btn-outline-dashed btn-outline-danger btn-active-light-danger active_inactive_language">Inactive</span>`;
                         }
                         return label_badge_change;
+                    }
+                },
+                {
+                    targets: 0,
+                    orderable: false,
+                    render: function (data) {
+                        return `
+                            <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                <input class="form-check-input checkbox-input-id" type="checkbox" value="${data}" />
+                            </div>`;
                     }
                 },
                 {
@@ -183,10 +186,10 @@ var DatatablesServerSide = function() {
                     showCancelButton: true,
                     buttonsStyling: true,
                     confirmButtonText: "Yes",
-                    cancelButtonText: "No, return",
+                    cancelButtonText: "No",
                     customClass: {
-                        confirmButton: "btn btn-primary",
-                        cancelButton: "btn btn-active-light"
+                        confirmButton: "btn fw-bold btn-danger",
+                        cancelButton: "btn fw-bold btn-success"
                     }
                 }).then(function(result){
                     if(result.value){               
@@ -233,10 +236,10 @@ var DatatablesServerSide = function() {
                     showCancelButton: true,
                     buttonsStyling: true,
                     confirmButtonText: "Yes",
-                    cancelButtonText: "No, return",
+                    cancelButtonText: "No",
                     customClass: {
-                        confirmButton: "btn btn-primary",
-                        cancelButton: "btn btn-active-light"
+                        confirmButton: "btn fw-bold btn-danger",
+                        cancelButton: "btn fw-bold btn-success"
                     }
                 }).then(function(result){
                     if(result.value){               
@@ -288,15 +291,15 @@ var DatatablesServerSide = function() {
                 // Select parent row
                 const parent = e.target.closest('tr');
                 // Get customer name
-                const userName = parent.querySelectorAll('td')[2].innerText;
+                const userName = parent.querySelectorAll('td')[1].innerText;
                 //     // SweetAlert2 pop up --- official docs reference: https://sweetalert2.github.io/
                 Swal.fire({
                     text: "Are you sure you want to delete " + userName + "?",
                     icon: "warning",
                     showCancelButton: true,
                     buttonsStyling: false,
-                    confirmButtonText: "Yes, delete!",
-                    cancelButtonText: "No, cancel",
+                    confirmButtonText: "Yes",
+                    cancelButtonText: "No",
                     customClass: {
                         confirmButton: "btn fw-bold btn-danger",
                         cancelButton: "btn fw-bold btn-success"
@@ -398,11 +401,11 @@ var DatatablesServerSide = function() {
                 showCancelButton: true,
                 buttonsStyling: false,
                 showLoaderOnConfirm: true,
-                confirmButtonText: "Yes, delete!",
-                cancelButtonText: "No, cancel",
+                confirmButtonText: "Yes",
+                cancelButtonText: "No",
                 customClass: {
                     confirmButton: "btn fw-bold btn-danger",
-                    cancelButton: "btn fw-bold btn-active-light-primary"
+                    cancelButton: "btn fw-bold btn-success"
                 },
             }).then(function(result) {
                 if (result.value) {

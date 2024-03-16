@@ -39,7 +39,6 @@ class LoadCategoryDatatable(BaseDatatableView):
 
     def get_initial_queryset(self):
         filter_value = self.request.POST.get('columns[3][search][value]', None)
-        print("Filter Value:", filter_value)
         if filter_value == '1':
             return self.model.objects.filter(is_active=True).order_by('-id')
         elif filter_value == '2':
@@ -49,7 +48,6 @@ class LoadCategoryDatatable(BaseDatatableView):
 
     def filter_queryset(self, qs):
         search = self.request.POST.get('search[value]', None)
-        print("Search Value:", search)
         if search:
             qs = qs.filter(
                 Q(category_name__istartswith=search)
